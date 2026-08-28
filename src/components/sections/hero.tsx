@@ -45,7 +45,7 @@ export function Hero() {
     <section
       ref={ref}
       id="top"
-      className="grid grid-cols-1 items-stretch gap-4 pt-4 lg:h-[min(80vh,760px)] lg:grid-cols-[1.1fr_0.9fr]"
+      className="grid grid-cols-1 items-stretch gap-4 my-20 lg:h-[min(76vh,720px)] lg:grid-cols-[1.1fr_0.9fr]"
     >
       {/* ── Left Hero Panel ──────────────────────────────────────────────── */}
       <div className="flex flex-col justify-between gap-12 rounded-3xl bg-white border border-[#E5E7EB] p-8 sm:p-12 shadow-[0_1px_3px_0_rgba(0,0,0,0.02)]">
@@ -64,7 +64,7 @@ export function Hero() {
           </h1>
 
           <div data-hero-fade className="mt-8 h-px w-20 bg-[#E5E7EB]" />
-          
+
           <p
             data-hero-fade
             className="mt-8 max-w-lg text-base sm:text-lg leading-relaxed text-[#6B7280]"
@@ -75,7 +75,7 @@ export function Hero() {
 
         <div data-hero-fade className="flex flex-wrap items-center gap-3">
           <a
-            href="#work"
+            href="#projects"
             className="group inline-flex items-center gap-2 rounded-full bg-[#1F2937] px-7 py-3.5 text-sm font-semibold text-[#F9FAFB] shadow-xs transition-all duration-200 hover:bg-[#111827] hover:scale-[1.02] active:scale-[0.98]"
           >
             {hero.primaryCta}

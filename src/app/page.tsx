@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/sections/hero";
-import { Work } from "@/components/sections/work";
+import { Projects } from "@/components/sections/projects";
 import { About } from "@/components/sections/about";
 import { Contact } from "@/components/sections/contact";
 import { projectsData } from "@/lib/data/projects";
@@ -23,14 +23,11 @@ export default function HomePage() {
   const imagesMap = getFolderImagesMap(projectsData.items);
 
   return (
-    <main className="pt-16">
-      {/* Constrained width desktop-first container with consistent section gap */}
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 flex flex-col gap-6 pb-6 pt-4">
-        <Hero />
-        <Work imagesMap={imagesMap} />
-        <About />
-        <Contact />
-      </div>
+    <main className="mx-auto w-full max-w-7xl px-4 sm:px-6 flex flex-col gap-4">
+      <Hero />
+      <Projects imagesMap={imagesMap} />
+      <About />
+      <Contact />
     </main>
   );
 }

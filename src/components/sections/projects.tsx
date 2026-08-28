@@ -13,12 +13,12 @@ function slugify(title: string): string {
 
 const RECENT_COUNT = 3;
 
-interface WorkProps {
+interface ProjectsProps {
   /** Pre-scanned images map: imageFolder → list of public-root image paths */
   imagesMap: Record<string, string[]>;
 }
 
-export function Work({ imagesMap }: WorkProps) {
+export function Projects({ imagesMap }: ProjectsProps) {
   const ref = useReveal<HTMLElement>();
   const projects = siteContent.projects;
   const recent = projects.items.slice(0, RECENT_COUNT);
@@ -26,14 +26,14 @@ export function Work({ imagesMap }: WorkProps) {
   return (
     <section
       ref={ref}
-      id="work"
+      id="projects"
       className="rounded-3xl bg-white border border-[#E5E7EB] p-8 sm:p-12 shadow-[0_1px_3px_0_rgba(0,0,0,0.02)]"
     >
       {/* Header */}
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p data-reveal className="text-xs font-semibold uppercase tracking-widest text-[#6B7280] mb-2">
-            Portfolio
+            Projects
           </p>
           <h2
             data-reveal
