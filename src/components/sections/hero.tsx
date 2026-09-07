@@ -5,14 +5,18 @@ import { gsap, ensureGsap } from "@/lib/reveal";
 import { siteContent } from "@/lib/content/site";
 import { ArrowUpRight } from "lucide-react";
 
-export function Hero() {
+interface HeroProps {
+  delay?: number;
+}
+
+export function Hero({ delay = 0 }: HeroProps) {
   const ref = useRef<HTMLElement>(null);
   const hero = siteContent.hero;
 
   useEffect(() => {
     ensureGsap();
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" }, delay });
       tl.from("[data-hero-line] > span", {
         yPercent: 110,
         duration: 1.05,
@@ -98,7 +102,7 @@ export function Hero() {
             alt={hero.portraitAlt}
             width={1024}
             height={1280}
-            className="h-full w-full object-cover grayscale opacity-90 transition-all duration-700 hover:scale-102 hover:grayscale-0"
+            className="h-full w-full object-cover [object-position:center_20%] grayscale opacity-90 transition-all duration-700 hover:grayscale-0"
           />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#FFFFFF] via-[#FFFFFF]/85 to-transparent px-6 pt-24 pb-6 sm:px-8 sm:pb-8">
             <p className="display text-[clamp(1.4rem,2.8vw,2.2rem)] text-[#1F2937] leading-tight">

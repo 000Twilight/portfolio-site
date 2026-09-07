@@ -1,12 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { experienceData } from "@/lib/data/experience";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
+import { ContactModal } from "@/components/ui/contact-modal";
 
 export default function WorkPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   return (
-    <main className="mx-auto w-full max-w-5xl px-5 sm:px-6 py-28">
+    <main className="mx-auto w-full max-w-5xl px-5 sm:px-6 pt-24 pb-12">
       {/* Page header */}
       <div className="mb-14">
         <Link
@@ -101,14 +104,19 @@ export default function WorkPage() {
         <h3 className="mt-2 text-2xl font-bold text-[#1F2937]">
           Let&apos;s talk about your next project
         </h3>
-        <Link
-          href="mailto:mario.richie.lim@gmail.com"
+        <button
+          onClick={() => setIsModalOpen(true)}
           className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#1F2937] px-7 py-3 text-sm font-semibold text-[#F9FAFB] shadow-xs transition-all duration-200 hover:bg-[#111827] hover:scale-[1.02] active:scale-[0.98]"
         >
-          mario.richie.lim@gmail.com
+          Send an Inquiry
           <ArrowUpRight size={16} />
-        </Link>
+        </button>
       </div>
+
+      <ContactModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
     </main>
   );
 }

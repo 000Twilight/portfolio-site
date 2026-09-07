@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { experienceData } from "@/lib/data/experience";
-import ExperienceItem from "@/components/experience/experience-item";
+import ExperienceItem from "@/components/ui/experience-item";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 

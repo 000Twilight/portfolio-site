@@ -1,9 +1,9 @@
 "use client";
 
 import { siteContent } from "@/lib/content/site";
-import SocialFlipButton from "@/components/UI/SocialFlipButton";
+import SocialFlipButton from "@/components/ui/social-flip-button";
 import { FaInstagram, FaGithub, FaLinkedin } from "react-icons/fa";
-import { Mail } from "lucide-react";
+import { Mail, ArrowUpRight } from "lucide-react";
 
 const { contact } = siteContent;
 
@@ -22,14 +22,14 @@ const getSocialIcon = (label: string) => {
 
 export default function Footer() {
   const socialItems = contact.socialLinks.map((link) => ({
-    letter: link.label.charAt(0),
+    letter: <ArrowUpRight size={16} />,
     icon: getSocialIcon(link.label),
     label: link.label,
     href: link.href,
   }));
 
   return (
-    <footer className="mx-auto w-full max-w-7xl px-4 sm:px-6 pb-12 mt-0">
+    <footer className="mx-auto w-full max-w-7xl px-4 sm:px-6 pb-12 mt-6 sm:mt-8">
       <div className="flex flex-col rounded-3xl p-8 sm:p-10 relative overflow-hidden bg-white border border-[#E5E7EB] shadow-[0_1px_3px_0_rgba(0,0,0,0.02)]">
         {/* Top Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">

@@ -81,7 +81,7 @@ export default function ParallaxSection({
     });
 
     return (
-        <ParallaxContext.Provider value={contextValue}>
+        <ParallaxContext value={contextValue}>
             <section
                 ref={sectionRef}
                 className={`relative h-screen w-full overflow-hidden ${className}`}
@@ -100,6 +100,6 @@ export default function ParallaxSection({
                     {children}
                 </div>
             </section>
-        </ParallaxContext.Provider>
+        </ParallaxContext>
     );
 }

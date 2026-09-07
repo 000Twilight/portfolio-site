@@ -4,15 +4,12 @@ import { useState } from "react";
 import { useReveal } from "@/lib/reveal";
 import { siteContent } from "@/lib/content/site";
 import { 
-  ArrowUpRight, 
-  Copy, 
-  Check, 
-  Send, 
   Clock, 
   MapPin, 
   Sparkles,
-  Mail
 } from "lucide-react";
+import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
+import { ContactForm } from "@/components/ui/contact-form";
 
 const PROJECT_TYPES = [
   "Full-Stack Web",
@@ -25,29 +22,6 @@ const PROJECT_TYPES = [
 export function Contact() {
   const ref = useReveal<HTMLElement>();
   const contact = siteContent.contact;
-
-  const [selectedType, setSelectedType] = useState<string>("Full-Stack Web");
-  const [copied, setCopied] = useState(false);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-
-  const handleCopyEmail = () => {
-    navigator.clipboard.writeText(contact.email);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const subject = encodeURIComponent(`Project Inquiry: ${selectedType} - from ${name}`);
-    const body = encodeURIComponent(
-      `Hi Mario,\n\nName: ${name}\nEmail: ${email}\nProject Type: ${selectedType}\n\nMessage:\n${message}\n`
-    );
-    window.location.href = `mailto:${contact.email}?subject=${subject}&body=${body}`;
-    setSubmitted(true);
-  };
 
   return (
     <section
@@ -79,9 +53,9 @@ export function Contact() {
         </div>
 
         {/* 2-Column Bento / Form Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
           {/* ── Left Column: Direct info & Availability (5 Cols) ────────── */}
-          <div data-reveal className="lg:col-span-5 flex flex-col gap-4">
+          <div data-reveal className="lg:col-span-5 flex flex-col gap-4 h-full">
             {/* Status Card */}
             <div className="rounded-2xl bg-[#F9FAFB] border border-[#E5E7EB] p-6 shadow-xs">
               <div className="flex items-center justify-between gap-2 mb-4">
@@ -109,159 +83,55 @@ export function Contact() {
               </div>
             </div>
 
-            {/* Quick Email Copy Card */}
+            {/* Social Links Card */}
             <div className="rounded-2xl bg-[#F9FAFB] border border-[#E5E7EB] p-6 shadow-xs">
-              <span className="text-xs font-semibold uppercase tracking-wider text-[#6B7280] block mb-2">
-                Direct Email
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#6B7280] block mb-4">
+                Connect Elsewhere
               </span>
-              <p className="text-base font-semibold text-[#1F2937] truncate mb-4">
-                {contact.email}
-              </p>
-              <div className="flex flex-wrap items-center gap-2">
-                <button
-                  type="button"
-                  onClick={handleCopyEmail}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-white border border-[#E5E7EB] px-4 py-2 text-xs font-medium text-[#1F2937] shadow-xs transition-all duration-200 hover:bg-[#F3F4F6] hover:border-[#D1D5DB] active:scale-95"
-                >
-                  {copied ? (
-                    <>
-                      <Check size={13} className="text-emerald-600" />
-                      <span className="text-emerald-700 font-semibold">Copied!</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy size={13} className="text-[#6B7280]" />
-                      <span>Copy Email</span>
-                    </>
-                  )}
-                </button>
+              <div className="flex flex-col gap-3">
                 <a
-                  href={`mailto:${contact.email}`}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-[#1F2937] px-4 py-2 text-xs font-medium text-[#F9FAFB] shadow-xs transition-all duration-200 hover:bg-[#111827] active:scale-95"
+                  href="https://github.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center gap-3 rounded-xl bg-white border border-[#E5E7EB] px-4 py-3 shadow-xs transition-all duration-200 hover:bg-[#F3F4F6] hover:border-[#D1D5DB]"
                 >
-                  <Mail size={13} />
-                  <span>Open Mail App</span>
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#F3F4F6] text-[#4B5563] group-hover:bg-white group-hover:text-[#1F2937] transition-colors">
+                    <FaGithub size={16} />
+                  </div>
+                  <span className="text-sm font-medium text-[#1F2937]">GitHub</span>
+                </a>
+                
+                <a
+                  href="https://linkedin.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center gap-3 rounded-xl bg-white border border-[#E5E7EB] px-4 py-3 shadow-xs transition-all duration-200 hover:bg-[#F3F4F6] hover:border-[#D1D5DB]"
+                >
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#F3F4F6] text-[#4B5563] group-hover:bg-white group-hover:text-[#0077b5] transition-colors">
+                    <FaLinkedin size={16} />
+                  </div>
+                  <span className="text-sm font-medium text-[#1F2937]">LinkedIn</span>
+                </a>
+
+                <a
+                  href="https://twitter.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center gap-3 rounded-xl bg-white border border-[#E5E7EB] px-4 py-3 shadow-xs transition-all duration-200 hover:bg-[#F3F4F6] hover:border-[#D1D5DB]"
+                >
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#F3F4F6] text-[#4B5563] group-hover:bg-white group-hover:text-[#1DA1F2] transition-colors">
+                    <FaTwitter size={16} />
+                  </div>
+                  <span className="text-sm font-medium text-[#1F2937]">Twitter</span>
                 </a>
               </div>
             </div>
 
-            {/* Social Links */}
-            <div className="rounded-2xl bg-[#F9FAFB] border border-[#E5E7EB] p-6 shadow-xs">
-              <span className="text-xs font-semibold uppercase tracking-wider text-[#6B7280] block mb-3">
-                Social Profiles
-              </span>
-              <div className="flex flex-wrap gap-2">
-                {contact.socialLinks.map((social) => (
-                  <a
-                    key={social.label}
-                    href={social.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 rounded-full bg-white border border-[#E5E7EB] px-3.5 py-1.5 text-xs font-medium text-[#1F2937] transition-all duration-200 hover:border-[#D1D5DB] hover:shadow-xs"
-                  >
-                    <span>{social.label}</span>
-                    <ArrowUpRight size={13} className="text-[#9CA3AF]" />
-                  </a>
-                ))}
-              </div>
-            </div>
           </div>
 
           {/* ── Right Column: Interactive Inquiry Form (7 Cols) ─────────── */}
-          <div data-reveal className="lg:col-span-7 rounded-2xl bg-[#F9FAFB] border border-[#E5E7EB] p-6 sm:p-8 shadow-xs">
-            <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-              {/* Project Type Pills */}
-              <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-[#6B7280] mb-3">
-                  I&apos;m interested in:
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {PROJECT_TYPES.map((type) => {
-                    const isSelected = selectedType === type;
-                    return (
-                      <button
-                        key={type}
-                        type="button"
-                        onClick={() => setSelectedType(type)}
-                        className={`rounded-full px-3.5 py-1.5 text-xs font-medium transition-all duration-200 ${
-                          isSelected
-                            ? "bg-[#1F2937] text-[#F9FAFB] shadow-xs"
-                            : "bg-white border border-[#E5E7EB] text-[#6B7280] hover:text-[#1F2937] hover:border-[#D1D5DB]"
-                        }`}
-                      >
-                        {type}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Name & Email inputs */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="form-name" className="block text-xs font-semibold uppercase tracking-wider text-[#6B7280] mb-2">
-                    Your Name
-                  </label>
-                  <input
-                    id="form-name"
-                    type="text"
-                    required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="e.g. Alex Morgan"
-                    className="w-full rounded-xl bg-white border border-[#E5E7EB] px-4 py-3 text-sm text-[#1F2937] placeholder:text-[#9CA3AF] transition-colors focus:border-[#1F2937] focus:outline-none shadow-xs"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="form-email" className="block text-xs font-semibold uppercase tracking-wider text-[#6B7280] mb-2">
-                    Your Email
-                  </label>
-                  <input
-                    id="form-email"
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="e.g. alex@example.com"
-                    className="w-full rounded-xl bg-white border border-[#E5E7EB] px-4 py-3 text-sm text-[#1F2937] placeholder:text-[#9CA3AF] transition-colors focus:border-[#1F2937] focus:outline-none shadow-xs"
-                  />
-                </div>
-              </div>
-
-              {/* Message */}
-              <div>
-                <label htmlFor="form-message" className="block text-xs font-semibold uppercase tracking-wider text-[#6B7280] mb-2">
-                  Project Details or Message
-                </label>
-                <textarea
-                  id="form-message"
-                  required
-                  rows={4}
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Tell me a bit about your goals, timeline, or what you're looking to build..."
-                  className="w-full rounded-xl bg-white border border-[#E5E7EB] px-4 py-3 text-sm text-[#1F2937] placeholder:text-[#9CA3AF] transition-colors focus:border-[#1F2937] focus:outline-none shadow-xs resize-y"
-                />
-              </div>
-
-              {/* Submit Button */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
-                <button
-                  type="submit"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[#1F2937] px-8 py-3.5 text-sm font-semibold text-[#F9FAFB] shadow-xs transition-all duration-200 hover:bg-[#111827] hover:scale-[1.02] active:scale-[0.98]"
-                >
-                  <Send size={15} />
-                  <span>Send Inquiry</span>
-                </button>
-
-                {submitted && (
-                  <p className="text-xs text-emerald-700 font-medium text-center sm:text-right">
-                    ✓ Opening email client with your message...
-                  </p>
-                )}
-              </div>
-            </form>
+          <div data-reveal className="lg:col-span-7 rounded-2xl bg-[#F9FAFB] border border-[#E5E7EB] p-6 sm:p-8 shadow-xs h-full flex flex-col justify-center">
+            <ContactForm />
           </div>
         </div>
       </div>

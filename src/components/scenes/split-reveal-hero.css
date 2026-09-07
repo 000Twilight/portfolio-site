@@ -1,0 +1,376 @@
+/* Fonts loaded via <link> in layout.tsx */
+
+.sf-root,
+.sf-root * {
+  box-sizing: border-box;
+}
+
+/* ── Root canvas ─────────────────────────────────────────────────────────── */
+.sf-root {
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  min-height: 560px;
+  overflow: hidden;
+  isolation: isolate;
+  /* Cover phase background — matches the portfolio cool-white system */
+  background: #F9FAFB;
+  color: #1F2937;
+  font-family: "DM Sans", Arial, sans-serif;
+}
+
+.sf-root h1,
+.sf-root p {
+  margin: 0;
+}
+
+/* ── Shared layer positioning ────────────────────────────────────────────── */
+.sf-cover,
+.sf-tags,
+.sf-scene {
+  position: absolute;
+  inset: 0;
+}
+
+/* ── Cover panels ────────────────────────────────────────────────────────── */
+.sf-cover {
+  z-index: 4;
+  overflow: hidden;
+  background: #F9FAFB;
+  backface-visibility: hidden;
+  transform: translate3d(0,0,0);
+  will-change: transform, clip-path;
+  contain: layout paint;
+}
+
+.sf-bottom { z-index: 3; }
+.sf-top    { z-index: 4; }
+
+/* ── Intro text centred inside cover panels ──────────────────────────────── */
+.sf-intro,
+.sf-number {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%,-50%,0);
+}
+
+.sf-intro {
+  width: 100%;
+  text-align: center;
+}
+
+.sf-number {
+  left: calc(50% + 10rem);
+}
+
+/* Name + numeral share the same display scale */
+.sf-intro h1,
+.sf-number h1 {
+  font-size: clamp(2.5rem, 6.3vw, 6rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #1F2937;
+  font-family: "Bricolage Grotesque", Arial, sans-serif;
+  text-transform: none;
+}
+
+/* ── Character-level animation primitives ────────────────────────────────── */
+.sf-char {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  backface-visibility: hidden;
+  will-change: transform, font-size;
+}
+
+.sf-char > span {
+  display: inline-block;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+/* Critical first-frame states — prevents flash before JS runs */
+.sf-cover .sf-intro .sf-char > span,
+.sf-cover .sf-number .sf-char > span {
+  transform: translate3d(0,-110%,0);
+}
+
+.sf-first {
+  transform-origin: top left;
+}
+
+/* ── Ambient discipline tags ─────────────────────────────────────────────── */
+.sf-tags {
+  z-index: 5;
+  pointer-events: none;
+}
+
+.sf-tag {
+  position: absolute;
+  width: max-content;
+  overflow: hidden;
+  /* Slate gray — matches portfolio's muted text token */
+  color: #6B7280;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.sf-word {
+  display: inline-block;
+  transform: translate3d(0,-110%,0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+.sf-tag-1 { top: 15%;    left: 15%; }
+.sf-tag-2 { bottom: 15%; left: 25%; }
+.sf-tag-3 { right: 15%;  bottom: 30%; }
+
+/* ── Scene (full-bleed photo) ───────────────────────────────────────────── */
+.sf-scene {
+  z-index: 2;
+  overflow: hidden;
+  clip-path: polygon(0 48%,0 48%,0 52%,0 52%);
+  backface-visibility: hidden;
+  transform: translate3d(0,0,0);
+  will-change: clip-path;
+  contain: layout paint;
+}
+
+.sf-image,
+.sf-shade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.sf-image {
+  object-fit: cover;
+  object-position: center top;
+  transform: translate3d(0,0,0) scale(1.001);
+  backface-visibility: hidden;
+}
+
+/* ── Image comparison layers ─────────────────────────────────────────────── */
+.sf-image-top {
+  will-change: clip-path;
+}
+
+/* ── Drag-to-compare dividers ────────────────────────────────────────────── */
+
+@keyframes sf-line-in {
+  from { transform: translateX(-50%) scaleY(0); opacity: 0; }
+  to   { transform: translateX(-50%) scaleY(1); opacity: 1; }
+}
+
+@keyframes sf-handle-pop {
+  from { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+  to   { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+/* Staggered nudge for left and right dividers */
+@keyframes sf-hint-left {
+  0%   { transform: translate(-50%, -50%); }
+  18%  { transform: translate(calc(-50% - 30px), -50%); }
+  50%  { transform: translate(calc(-50% + 30px), -50%); }
+  78%  { transform: translate(calc(-50% - 10px), -50%); }
+  100% { transform: translate(-50%, -50%); }
+}
+@keyframes sf-hint-right {
+  0%   { transform: translate(-50%, -50%); }
+  18%  { transform: translate(calc(-50% + 30px), -50%); }
+  50%  { transform: translate(calc(-50% - 30px), -50%); }
+  78%  { transform: translate(calc(-50% + 10px), -50%); }
+  100% { transform: translate(-50%, -50%); }
+}
+
+.sf-compare {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 3;
+  width: 0;
+  opacity: 0;
+  pointer-events: none;
+  cursor: col-resize;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.sf-compare.sf-compare-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sf-compare:focus-visible {
+  outline: none;
+}
+
+/* Shade: heavier vignette so text remains legible over photo */
+.sf-shade {
+  background: linear-gradient(
+    180deg,
+    rgba(0,0,0,.55) 0%,
+    rgba(0,0,0,.12) 40%,
+    rgba(0,0,0,.08) 55%,
+    rgba(0,0,0,.55) 100%
+  );
+  pointer-events: none;
+}
+
+/* ── In-scene nav & footer ──────────────────────────────────────────────── */
+.sf-nav,
+.sf-footer {
+  position: absolute;
+  left: 0;
+  z-index: 2;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.75);
+}
+
+.sf-nav { top: 0; }
+
+.sf-nav strong {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: #fff;
+  font-family: "Bricolage Grotesque", Arial, sans-serif;
+}
+
+.sf-footer { bottom: 0; }
+
+/* Clickable "Scroll Down" anchor — smooth animated arrow on hover */
+.sf-footer-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.sf-footer-cta:hover {
+  color: rgba(255,255,255,1);
+}
+
+.sf-footer-arrow {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(.8,0,.3,1);
+}
+
+.sf-footer-cta:hover .sf-footer-arrow {
+  transform: translateY(3px);
+}
+
+/* ── Central reveal card ────────────────────────────────────────────────── */
+.sf-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  width: min(30%, 480px);
+  height: 68%;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  overflow: hidden;
+  transform: translate3d(-50%,-50%,0);
+  /* Portfolio palette: charcoal background with a barely-there border */
+  background: #F9FAFB;
+  clip-path: inset(50% 0);
+  backface-visibility: hidden;
+  will-change: clip-path;
+  contain: layout paint;
+}
+
+.sf-card h1 {
+  width: 100%;
+  text-align: center;
+  color: #1F2937;
+  font-size: clamp(2rem, 3vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-family: "Bricolage Grotesque", Arial, sans-serif;
+  text-transform: none;
+}
+
+.sf-card-sub {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #6B7280;
+  text-align: center;
+}
+
+.sf-card .sf-char > span {
+  transform: translate3d(0,110%,0);
+}
+
+/* ── Responsive adjustments ─────────────────────────────────────────────── */
+@media (max-width: 1000px) {
+  .sf-number {
+    left: calc(50% + 4rem);
+  }
+
+  .sf-card {
+    width: 72%;
+  }
+
+  .sf-nav,
+  .sf-footer {
+    padding: 1.4rem;
+  }
+
+  .sf-tag-1 { left: 8%; }
+  .sf-tag-2 { left: 12%; }
+  .sf-tag-3 { right: 8%; }
+}
+
+@media (max-width: 560px) {
+  .sf-root {
+    min-height: 540px;
+  }
+
+  .sf-card {
+    width: 80%;
+    height: 62%;
+  }
+
+  .sf-nav,
+  .sf-footer {
+    padding: 1rem;
+    font-size: 10px;
+  }
+
+  .sf-nav strong {
+    font-size: 16px;
+  }
+
+  .sf-tag {
+    font-size: 9px;
+  }
+
+  .sf-tag-1 { top: 18%;    left: 7%; }
+  .sf-tag-2 { bottom: 18%; left: 10%; }
+  .sf-tag-3 { right: 7%;   bottom: 26%; }
+}

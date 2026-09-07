@@ -20,14 +20,14 @@ export function useFloating<T extends HTMLElement = HTMLDivElement>(
     delay?: number,
     xOffset?: number,
     rotOffset?: number
-): RefObject<T>;
+): RefObject<T | null>;
 
 // ----------------------------------------------------------------------
 // Overload 2: Modern options object (useFloating({ yOffset: 35, duration: 6 }))
 // ----------------------------------------------------------------------
 export function useFloating<T extends HTMLElement = HTMLDivElement>(
     options: FloatingConfig
-): RefObject<T>;
+): RefObject<T | null>;
 
 // ----------------------------------------------------------------------
 // Implementation
@@ -38,7 +38,7 @@ export function useFloating<T extends HTMLElement = HTMLDivElement>(
     arg3?: number,
     arg4?: number,
     arg5?: number
-): RefObject<T> {
+): RefObject<T | null> {
     const ref = useRef<T>(null);
     const prefersReducedMotion = useReducedMotion();
 

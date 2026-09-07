@@ -4,7 +4,7 @@ import { siteContent } from "@/lib/content/site";
 import Link from "next/link";
 import { useReveal } from "@/lib/reveal";
 import { ArrowUpRight } from "lucide-react";
-import { CoverImage } from "@/components/shared/CoverImage";
+import { CoverImage } from "@/components/ui/cover-image";
 
 /** Convert a project title to a URL slug */
 function slugify(title: string): string {
@@ -27,7 +27,7 @@ export function Projects({ imagesMap }: ProjectsProps) {
     <section
       ref={ref}
       id="projects"
-      className="rounded-3xl bg-white border border-[#E5E7EB] p-8 sm:p-12 shadow-[0_1px_3px_0_rgba(0,0,0,0.02)]"
+      className="rounded-3xl bg-white border border-[#E5E7EB] p-6 sm:p-8 md:p-10 shadow-[0_1px_3px_0_rgba(0,0,0,0.02)]"
     >
       {/* Header */}
       <div className="flex flex-wrap items-end justify-between gap-4">
@@ -51,7 +51,7 @@ export function Projects({ imagesMap }: ProjectsProps) {
       </div>
 
       {/* Grid — 3 recent projects */}
-      <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+      <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
         {recent.map((p, i) => (
           <article key={p.title} data-reveal>
             <Link
@@ -64,6 +64,7 @@ export function Projects({ imagesMap }: ProjectsProps) {
                   images={imagesMap[p.imageFolder] ?? []}
                   alt={p.alt}
                   colorIndex={i}
+                  priority={i < RECENT_COUNT}
                 />
 
                 {/* Year badge */}

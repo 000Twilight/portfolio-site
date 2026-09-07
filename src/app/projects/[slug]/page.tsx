@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { projectsData } from "@/lib/data/projects";
 import { getFolderImages } from "@/lib/get-folder-images";
+import { ProjectGallery } from "@/components/ui/project-gallery";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 
 /** Convert a project title to a URL slug */
@@ -23,9 +23,10 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const project = findProject(params.slug);
+  const { slug } = await params;
+  const project = findProject(slug);
   if (!project) return {};
   return {
     title: `${project.title} | Mario Richie Lim`,
@@ -37,12 +38,13 @@ export async function generateMetadata({
   };
 }
 
-export default function ProjectPage({
+export default async function ProjectPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const project = findProject(params.slug);
+  const { slug } = await params;
+  const project = findProject(slug);
   if (!project) notFound();
   // TypeScript doesn't narrow through notFound() (returns never), so we assert here.
   if (!project) return null;
@@ -52,7 +54,7 @@ export default function ProjectPage({
   const images = getFolderImages(subfolder);
 
   return (
-    <main className="mx-auto w-full max-w-4xl px-5 sm:px-6 py-28">
+    <main className="mx-auto w-full max-w-5xl px-5 sm:px-6 pt-24 pb-12">
       {/* Breadcrumb */}
       <nav className="mb-10" aria-label="Breadcrumb">
         <Link
@@ -95,42 +97,12 @@ export default function ProjectPage({
           ))}
         </div>
 
-        {/* Image gallery — only rendered when images exist */}
-        {images.length > 0 && (
-          <div className="mt-10">
-            {/* Hero image */}
-            <div className="relative w-full aspect-[16/9] rounded-2xl overflow-hidden border border-[#E5E7EB] bg-[#F3F4F6]">
-              <Image
-                src={images[0]}
-                alt={project.alt}
-                fill
-                priority
-                sizes="(max-width: 768px) 100vw, 896px"
-                className="object-cover"
-              />
-            </div>
-
-            {/* Thumbnail strip — remaining images */}
-            {images.length > 1 && (
-              <div className="mt-3 grid grid-cols-3 sm:grid-cols-4 gap-2">
-                {images.slice(1).map((src, i) => (
-                  <div
-                    key={src}
-                    className="relative aspect-[4/3] rounded-xl overflow-hidden border border-[#E5E7EB] bg-[#F3F4F6]"
-                  >
-                    <Image
-                      src={src}
-                      alt={`${project.alt} — screenshot ${i + 2}`}
-                      fill
-                      sizes="(max-width: 768px) 33vw, 200px"
-                      className="object-cover"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+        {/* Image gallery */}
+        <ProjectGallery 
+          images={images} 
+          alt={project.alt} 
+          mode={project.galleryMode || "landscape"} 
+        />
 
         {/* Description */}
         <div className="rounded-3xl bg-white border border-[#E5E7EB] mt-10 p-8 sm:p-12 shadow-[0_1px_3px_0_rgba(0,0,0,0.02)]">

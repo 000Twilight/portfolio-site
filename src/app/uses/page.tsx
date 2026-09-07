@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 interface ToolItem {
   name: string;
-  description: string;
+  description: React.ReactNode;
 }
 
 interface CategoryProps {
@@ -49,22 +49,22 @@ export default function UsesPage() {
     { name: "Figma", description: "Used for interface design, wireframing, and planning user experience layouts." },
     { name: "DBeaver", description: "Universal database tool used to manage and query MySQL and PostgreSQL databases." },
     { name: "Git & GitHub", description: "Version control and repository hosting for my projects and collaborative workflows." },
-    { name: "Make.com & Telegram Bot", description: "Built custom integrations: Telegram Bot -> File/Screenshot upload -> Gemini analysis -> JSON parsing -> Notion Database (expenses, incomes, transfers)." },
+    { name: "Make.com & n8n", description: <>Visual workflow automation tools for API integrations and custom backend logic (e.g., my <Link href="/projects/finance-tracker-automation-bot" className="underline underline-offset-2 decoration-[#D1D5DB] hover:text-[#1F2937] hover:decoration-[#9CA3AF] transition-colors">Finance Tracker Bot</Link>).</> },
     { name: "Google AI Pro", description: "Leveraged for code generation, tutoring, and automating workflow logic." },
   ];
 
   const devStack = [
-    { name: "React & React Native (Expo)", description: "Used for building responsive web applications and cross-platform mobile prototypes." },
+    { name: "React, Vue & Tailwind CSS", description: "Used for building responsive web applications and reactive frontend UI components." },
     { name: "TypeScript & JavaScript", description: "Type-safe programming for both web applications and Node.js backend logic." },
     { name: "Laravel & PHP", description: "My go-to backend framework for building structured, robust full-stack applications with databases." },
-    { name: "Node.js & REST APIs", description: "Creating backend services, RESTful API integrations, and event-driven automation scripts." },
+    { name: "Node.js, Express.js & REST APIs", description: "Creating backend services, RESTful API integrations, and event-driven automation scripts." },
     { name: "PostgreSQL, MySQL & Supabase", description: "Managing relational databases, designing schemas, and implementing backend-as-a-service logic." },
-    { name: "Tailwind CSS & Vue", description: "Fast UI development, scoping styles, and building reactive component structures." },
-    { name: "Kotlin & Scriptcase", description: "Used for native Android applications and rapid low-code database application development." },
+    { name: "Kotlin, Flutter & React Native", description: "Used for native Android applications and cross-platform mobile experiences." },
+    { name: "Scriptcase & Low-Code", description: "Rapid low-code database application development and automation." },
   ];
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-5 sm:px-6 py-28">
+    <main className="mx-auto w-full max-w-5xl px-5 sm:px-6 pt-24 pb-12">
       {/* Back button */}
       <div className="mb-10">
         <Link

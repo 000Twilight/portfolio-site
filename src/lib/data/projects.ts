@@ -8,12 +8,24 @@ export interface Project {
   description: string;
   tags: string[];
   link: string;
+  galleryMode?: "landscape" | "portrait";
 }
 
 export const projectsData = {
   title: "Projects",
   subtitle: "Selected Engineering & Research Work",
   items: [
+    {
+      title: "Finance Tracker Automation Bot",
+      year: "2026",
+      role: "Automation Engineer (Personal Project)",
+      imageFolder: "/assets/images/projects/finance-bot",
+      alt: "Telegram bot to Notion finance tracker automation flow",
+      summary: "An automated workflow integrating Telegram, Google Gemini API, and Notion to seamlessly track personal finances via receipt scanning.",
+      description: "Built a fully automated personal finance tracking system to eliminate manual data entry. The workflow begins with a custom Telegram bot where I simply upload images of receipts or transaction screenshots.\n\nThe system sends the image to the Google Gemini API with a customized prompt to accurately extract transaction details, outputting structured JSON. This data is then processed and routed to my Notion workspace, which contains interconnected databases for expenses, income, and transfers. The automation dynamically searches Notion relation properties to link the correct accounts and categories before seamlessly inserting the new records, turning a simple photo into a categorized database entry in seconds.",
+      tags: ["Telegram Bot", "Gemini API", "Notion API", "Automation", "Workflow"],
+      link: "#"
+    },
     {
       title: "Bazaarku Event Platform",
       year: "2025",
@@ -45,7 +57,8 @@ export const projectsData = {
       summary: "Undergraduate thesis research utilizing ensemble machine learning to predict drug-target interactions for lung cancer therapies.",
       description: "Spearheaded an end-to-end machine learning pipeline to predict drug-target interactions (DTI) for lung cancer therapies, focusing on natural compounds derived from Indonesian herbs. \n\nI engineered a data preprocessing workflow using cheminformatics tools to parse complex molecular structures from the KNApSAcK database, converting them into machine-readable fingerprints and features. For the predictive modeling, I trained, hyperparameter-tuned, and rigorously evaluated multiple ensemble models, including XGBoost, Random Forest, LightGBM, and Cascade Deep Forest. The research focuses on optimizing metrics like AUPRC to establish a robust baseline for identifying high-potential therapeutic candidates.",
       tags: ["Python", "XGBoost", "LightGBM", "Cheminformatics", "Data Engineering"],
-      link: "#"
+      link: "https://kc.umn.ac.id/id/eprint/48006/",
+      galleryMode: "portrait"
     },
     {
       title: "NusaVision Freelance Hub",
@@ -67,7 +80,8 @@ export const projectsData = {
       summary: "A cross-platform mobile payment prototype handling complex transaction logic for utilities and digital goods.",
       description: "Designed and developed a comprehensive prototype for a Payment Point Online Bank (PPOB) hybrid application using React Native and Expo. As the sole developer, I was responsible for the entire mobile lifecycle, from UI implementation to complex state management. \n\nThe application features secure transaction logic for a variety of services, including electricity token purchases, mobile phone credit top-ups, and health assurance payments. I implemented a robust local state management solution to handle multi-step checkout flows, ensuring data integrity and a smooth user experience, alongside a detailed transaction history module.",
       tags: ["React Native", "Expo", "TypeScript", "State Management", "Mobile UI"],
-      link: "#"
+      link: "#",
+      galleryMode: "portrait"
     },
     {
       title: "FamilyTask: Android To-Do App",
@@ -78,7 +92,8 @@ export const projectsData = {
       summary: "A native Android application designed to synchronize tasks between parents and children, featuring role-based access and automated local reminders.",
       description: "Engineered a native Android application tailored for family task management, specifically designed to bridge the communication gap between parents and children through shared digital to-do lists. The core technical challenge was architecting a flexible data model that seamlessly supports both independent single-user modes and interconnected parent-child modes. \n\nUtilizing Kotlin and modern Android development practices, I built a robust local database for offline-first task creation. To justify the full-stack nature of the app, I integrated a backend service to handle cross-device synchronization, ensuring that when a parent assigns a chore, it instantly reflects on the child's device. Furthermore, I implemented Android's WorkManager to handle background processes, enabling precise, battery-efficient local reminders for upcoming deadlines without draining the device's resources.",
       tags: ["Kotlin", "Android SDK", "WorkManager", "Mobile Architecture", "REST APIs"],
-      link: "#"
+      link: "#",
+      galleryMode: "portrait"
     },
     {
       title: "Dansons: Real-Time Dance App",
@@ -89,7 +104,8 @@ export const projectsData = {
       summary: "A mobile application featuring innovative real-time dance matching, validated through user testing with an 85% satisfaction rate.",
       description: "Led the end-to-end UI/UX design for a mobile application that connects dancers in real-time, enabling spontaneous collaboration and practice sessions. The core innovation was designing an intuitive interface for the real-time dance matching feature, which required balancing complex location-based logic with a frictionless user experience. \n\nI spearheaded the design of 70% of the application using Figma, conducting extensive user research and iterative prototyping to ensure the interface felt natural for dancers on the go. The design process involved creating detailed user flows, wireframes, and high-fidelity prototypes, followed by rigorous usability testing. I conducted campus trials with peer testers, gathering quantitative and qualitative feedback to refine the interface. The final design achieved an 85% satisfaction rate, validating the user-centered approach and demonstrating the ability to translate complex technical features into delightful, accessible user experiences.",
       tags: ["Figma", "UI/UX Design", "User Research", "Prototyping", "Usability Testing"],
-      link: "#"
+      link: "#",
+      galleryMode: "portrait"
     },
     {
       title: "SMP Mater Dei E-Learning Platform",

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { projectsData } from "@/lib/data/projects";
-import ProjectCard from "@/components/project/project-card";
+import ProjectCard from "@/components/ui/project-card";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { getFolderImagesMap } from "@/lib/get-folder-images";
@@ -16,7 +16,7 @@ export default function ProjectsPage() {
   const imagesMap = getFolderImagesMap(projectsData.items);
 
   return (
-    <main className="mx-auto w-full max-w-7xl px-5 sm:px-6 py-28">
+    <main className="mx-auto w-full max-w-7xl px-5 sm:px-6 pt-24 pb-12">
       {/* Header */}
       <div className="mb-12">
         <Link

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Now | Mario Richie Lim",
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function NowPage() {
   return (
-    <main className="mx-auto w-full max-w-5xl px-5 sm:px-6 py-28">
+    <main className="mx-auto w-full max-w-5xl px-5 sm:px-6 pt-24 pb-12">
       {/* Back button */}
       <div className="mb-10">
         <Link
@@ -50,6 +50,15 @@ export default function NowPage() {
           <p className="mt-4 text-sm text-[#6B7280] leading-relaxed">
             My thesis involved constructing an end-to-end machine learning pipeline using Python (XGBoost, LightGBM, Cascade Deep Forest) to predict drug-target interactions (DTI) for lung cancer therapies using herbal molecular databases.
           </p>
+          <div className="mt-8">
+            <Link
+              href="/projects/ml-drug-discovery-pipeline"
+              className="inline-flex items-center gap-2 rounded-full bg-[#1F2937] px-5 py-2.5 text-xs font-semibold text-[#F9FAFB] shadow-xs transition-all duration-200 hover:bg-[#111827] hover:scale-[1.02] active:scale-[0.98]"
+            >
+              Read Thesis Details
+              <ArrowRight size={14} />
+            </Link>
+          </div>
         </div>
 
         {/* Card 2: Development & AI App */}
@@ -93,9 +102,20 @@ export default function NowPage() {
             </li>
             <li className="flex gap-3 text-sm text-[#1F2937] leading-relaxed">
               <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#6B7280]" />
-              Personal finance automations, integration strategies, and looking for full-stack opportunities.
+              <span>Personal finance automations, integration strategies, and looking for full-stack opportunities.</span>
             </li>
           </ul>
+          <div className="mt-8">
+            <Link
+              href="https://linkedin.com/in/mario-richie-lim"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full bg-[#1F2937] px-5 py-2.5 text-xs font-semibold text-[#F9FAFB] shadow-xs transition-all duration-200 hover:bg-[#111827] hover:scale-[1.02] active:scale-[0.98]"
+            >
+              Connect on LinkedIn
+              <ArrowRight size={14} />
+            </Link>
+          </div>
         </div>
 
         {/* Card 4: Location/Vibe */}
