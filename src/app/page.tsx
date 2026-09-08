@@ -7,6 +7,7 @@ import { Hero } from "@/components/sections/hero";
 
 const Projects = dynamic(() => import("@/components/sections/projects").then(m => m.Projects));
 const About = dynamic(() => import("@/components/sections/about").then(m => m.About));
+const Marquee = dynamic(() => import("@/components/sections/marquee").then(m => m.Marquee));
 const Contact = dynamic(() => import("@/components/sections/contact").then(m => m.Contact));
 const FracturedSection = dynamic(() => import("@/components/sections/fracture-section").then(m => m.FracturedSection));
 import { projectsData } from "@/lib/data/projects";
@@ -38,6 +39,7 @@ export default function HomePage() {
         <Hero delay={5.5} />
         <Projects imagesMap={imagesMap} />
         <About />
+        <Marquee />
         <Contact />
 
         {/* ── Fractured Reality showcase — before footer ── */}

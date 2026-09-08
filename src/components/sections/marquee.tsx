@@ -8,13 +8,17 @@ export function Marquee() {
   return (
     <section
       aria-hidden="true"
-      className="mt-3 overflow-hidden py-5 bg-card text-card-foreground rounded-3xl"
+      className="my-4 overflow-hidden py-8 w-screen relative left-1/2 -translate-x-1/2"
     >
-      <div className="flex animate-[marquee_18s_linear_infinite] gap-12 whitespace-nowrap">
-        {[...marquee.words, ...marquee.words].map((word, i) => (
+      <div className="flex w-max animate-[marquee_25s_linear_infinite] items-center gap-12 md:gap-24 whitespace-nowrap">
+        {[...marquee.words, ...marquee.words, ...marquee.words].map((word, i) => (
           <span
             key={i}
-            className="display text-[clamp(1.5rem,3vw,2.5rem)] text-card-foreground/40"
+            className="text-[clamp(2.5rem,5vw,4.5rem)] font-bold leading-none text-[#1F2937] opacity-30"
+            style={{ 
+              fontFamily: "var(--font-fancy)",
+              WebkitTextStroke: "1.5px #1F2937"
+            }}
           >
             {word}
           </span>

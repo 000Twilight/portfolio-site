@@ -2,6 +2,7 @@
 
 import React, { useLayoutEffect, useRef, useState } from "react";
 import { Hero } from "@/components/sections/hero";
+import { isInitialLoad } from "@/lib/store/intro-store";
 import "./split-reveal-hero.css";
 
 type Triple = [string, string, string];
@@ -64,17 +65,11 @@ export default function SplitRevealHero({
   className = "",
 }: SplitRevealHeroProps) {
   const rootRef = useRef<HTMLElement>(null);
-  const [isComplete, setIsComplete] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [isComplete, setIsComplete] = useState(!isInitialLoad);
+  const [shouldPlay, setShouldPlay] = useState<boolean>(isInitialLoad);
 
   useLayoutEffect(() => {
-    setMounted(true);
-    const hasPlayed = sessionStorage.getItem("introPlayed");
-    if (hasPlayed) {
-      setIsComplete(true);
-      return;
-    }
-    sessionStorage.setItem("introPlayed", "true");
+    if (!shouldPlay) return;
 
     const root = rootRef.current;
     if (!root) return;
@@ -383,11 +378,11 @@ export default function SplitRevealHero({
       animations.forEach((animation) => animation.cancel());
       timers.forEach(window.clearTimeout);
     };
-  }, []);
+  }, [shouldPlay]);
 
 
 
-  if (!mounted || isComplete) return null;
+  if (!shouldPlay || isComplete) return null;
 
   return (
     <section ref={rootRef} className={`sf-root ${className}`}>

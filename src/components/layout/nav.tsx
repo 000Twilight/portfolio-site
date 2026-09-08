@@ -13,6 +13,7 @@ import { siteContent } from "@/lib/content/site";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
+import { markInitialLoadComplete } from "@/lib/store/intro-store";
 
 export function Nav() {
   const ref = useRef<HTMLElement>(null);
@@ -31,6 +32,12 @@ export function Nav() {
 
   // ── entrance animation ───────────────────────────────────────────────────
   useEffect(() => {
+    // Mark the initial load as complete shortly after mount so that subsequent navigations
+    // know they are client-side navigations.
+    const timer = setTimeout(() => {
+      markInitialLoadComplete();
+    }, 100);
+
     ensureGsap();
     const ctx = gsap.context(() => {
       gsap.from("[data-nav-item]", {
@@ -42,7 +49,10 @@ export function Nav() {
         delay: 3.2, // fires after LoadingScreen exit (~3s)
       });
     }, ref);
-    return () => ctx.revert();
+    return () => {
+      clearTimeout(timer);
+      ctx.revert();
+    };
   }, []);
 
   const isActive = (href: string) =>

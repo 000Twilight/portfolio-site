@@ -44,6 +44,7 @@
 
   --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   --font-sans:    var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-fancy:   var(--font-fancy), cursive;
 }
 
 /* ── Cool Gray Professional Tokens ───────────────────────────────────────── */
@@ -193,5 +194,11 @@
   opacity: 0;
 }
 
-
-
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}

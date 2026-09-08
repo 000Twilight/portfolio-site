@@ -130,6 +130,8 @@ export const GooeyTextReveal = React.forwardRef<
             let animationFrame = 0;
             let measuredWidth = container.getBoundingClientRect().width;
             let disposed = false;
+            let hasRun = false;
+            let startTime = Date.now();
 
             const revert = () => {
                 tween?.scrollTrigger?.kill();
@@ -174,7 +176,10 @@ export const GooeyTextReveal = React.forwardRef<
                     duration,
                     ease,
                     stagger,
-                    onComplete,
+                    onComplete: () => {
+                        hasRun = true;
+                        if (onComplete) onComplete();
+                    },
                 };
 
                 if (mode === "scrub") {
@@ -197,7 +202,7 @@ export const GooeyTextReveal = React.forwardRef<
                             ? scroller
                             : scroller?.current ?? undefined;
 
-                    animation.delay = delay;
+                    animation.delay = hasRun ? 0 : delay;
                     animation.scrollTrigger = {
                         trigger: container,
                         start,
@@ -207,10 +212,17 @@ export const GooeyTextReveal = React.forwardRef<
                         scroller: resolvedScroller,
                     };
                 } else {
-                    animation.delay = delay;
+                    const elapsed = (Date.now() - startTime) / 1000;
+                    const remainingDelay = Math.max(0, delay - elapsed);
+                    animation.delay = hasRun ? 0 : remainingDelay;
                 }
 
                 tween = gsap.to(layers, animation);
+                
+                // If it already finished running, we can immediately jump to the end state
+                if (hasRun && mode === "immediate") {
+                    tween.progress(1);
+                }
             };
 
             build();
