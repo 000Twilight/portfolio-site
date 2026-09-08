@@ -16,8 +16,12 @@ export function Hero({ delay = 0 }: HeroProps) {
 
   useEffect(() => {
     ensureGsap();
+    const hasPlayed = sessionStorage.getItem("introPlayed");
+    // If the intro has already played, skip the initial wait.
+    const actualDelay = hasPlayed ? 0 : delay;
+
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: "power3.out" }, delay });
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" }, delay: actualDelay });
       tl.from("[data-hero-line] > span", {
         yPercent: 110,
         duration: 1.05,
@@ -72,7 +76,7 @@ export function Hero({ delay = 0 }: HeroProps) {
 
           <GooeyTextReveal
             mode="immediate"
-            delay={delay + 1.8}
+            delay={actualDelay + 1.8}
             className="mt-8 max-w-lg text-base sm:text-lg leading-relaxed text-[#6B7280]"
           >
             Full-stack developer and AI engineer based in Jakarta, specializing in building high-fidelity web, mobile apps, and intelligent automated workflows.
@@ -105,10 +109,11 @@ export function Hero({ delay = 0 }: HeroProps) {
             width={1024}
             height={1280}
             className="h-full w-full object-cover [object-position:center_20%] grayscale opacity-90 transition-all duration-700 hover:grayscale-0"
-            loading="lazy"
+            // Eager load since this is in the initial viewport once the intro finishes
+            fetchPriority="high"
           />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#FFFFFF] via-[#FFFFFF]/85 to-transparent px-6 pt-24 pb-6 sm:px-8 sm:pb-8">
-            <GooeyTextReveal mode="immediate" delay={delay + 2.5} className="display text-[clamp(1.4rem,2.8vw,2.2rem)] text-[#1F2937] leading-tight whitespace-pre-line">
+            <GooeyTextReveal mode="immediate" delay={actualDelay + 2.5} className="display text-[clamp(1.4rem,2.8vw,2.2rem)] text-[#1F2937] leading-tight whitespace-pre-line">
               {hero.spotlightTitle}
             </GooeyTextReveal>
             <p className="mt-3 max-w-sm text-xs sm:text-sm text-[#6B7280] leading-relaxed">

@@ -65,8 +65,17 @@ export default function SplitRevealHero({
 }: SplitRevealHeroProps) {
   const rootRef = useRef<HTMLElement>(null);
   const [isComplete, setIsComplete] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useLayoutEffect(() => {
+    setMounted(true);
+    const hasPlayed = sessionStorage.getItem("introPlayed");
+    if (hasPlayed) {
+      setIsComplete(true);
+      return;
+    }
+    sessionStorage.setItem("introPlayed", "true");
+
     const root = rootRef.current;
     if (!root) return;
 
@@ -378,7 +387,7 @@ export default function SplitRevealHero({
 
 
 
-  if (isComplete) return null;
+  if (!mounted || isComplete) return null;
 
   return (
     <section ref={rootRef} className={`sf-root ${className}`}>

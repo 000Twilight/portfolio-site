@@ -105,7 +105,7 @@ export default async function ProjectPage({
         />
 
         {/* Description */}
-        <div className="rounded-3xl bg-white border border-[#E5E7EB] mt-10 p-8 sm:p-12 shadow-[0_1px_3px_0_rgba(0,0,0,0.02)]">
+        <div className="rounded-2xl bg-white border border-[#E5E7EB] mt-10 p-8 sm:p-12 shadow-[0_1px_3px_0_rgba(0,0,0,0.02)]">
           {project.description.split("\n\n").map((paragraph, i) => (
             <p
               key={i}
