@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { GooeyTextReveal } from "@/components/ui/gooey-text-reveal";
 
 export const metadata: Metadata = {
   title: "Uses | Mario Richie Lim",
@@ -81,9 +82,9 @@ export default function UsesPage() {
         <p className="text-xs font-semibold uppercase tracking-widest text-[#6B7280] mb-2">
           Workspace & Stack
         </p>
-        <h1 className="display text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[#1F2937]">
+        <GooeyTextReveal mode="immediate" className="display text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[#1F2937]">
           Uses
-        </h1>
+        </GooeyTextReveal>
         <p className="mt-3 text-sm text-[#6B7280]">
           A list of the hardware, software, and tools I use on a daily basis to design and build.
         </p>

@@ -4,6 +4,7 @@ import ProjectCard from "@/components/ui/project-card";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { getFolderImagesMap } from "@/lib/get-folder-images";
+import { GooeyTextReveal } from "@/components/ui/gooey-text-reveal";
 
 export const metadata: Metadata = {
   title: "Projects | Mario Richie Lim",
@@ -32,9 +33,9 @@ export default function ProjectsPage() {
             <p className="text-xs font-semibold uppercase tracking-widest text-[#6B7280] mb-2">
               All Works
             </p>
-            <h1 className="display text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[#1F2937]">
+            <GooeyTextReveal mode="immediate" className="display text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[#1F2937]">
               {projectsData.title}
-            </h1>
+            </GooeyTextReveal>
           </div>
           <p className="text-sm text-[#6B7280] max-w-md">{projectsData.subtitle}</p>
         </div>

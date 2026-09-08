@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { GooeyTextReveal } from "@/components/ui/gooey-text-reveal";
 
 export const metadata: Metadata = {
   title: "Now | Mario Richie Lim",
@@ -26,9 +27,9 @@ export default function NowPage() {
         <p className="text-xs font-semibold uppercase tracking-widest text-[#6B7280] mb-2">
           Current Focus
         </p>
-        <h1 className="display text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[#1F2937]">
+        <GooeyTextReveal mode="immediate" className="display text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[#1F2937]">
           Now
-        </h1>
+        </GooeyTextReveal>
         <p className="mt-3 text-sm text-[#6B7280]">
           A snapshot of my current projects, learnings, and lifestyle. Updated August 2026.
         </p>

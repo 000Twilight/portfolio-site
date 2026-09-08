@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { gsap, ScrollTrigger, useReveal } from "@/lib/reveal";
 import { siteContent } from "@/lib/content/site";
+import { GooeyTextReveal } from "@/components/ui/gooey-text-reveal";
 
 export function About() {
   const ref   = useReveal<HTMLElement>();
@@ -69,15 +70,15 @@ export function About() {
           >
             {about.title}
           </p>
-          <p
-            data-reveal
+          <GooeyTextReveal
+            mode="scroll"
             className="mt-6 leading-relaxed tracking-tight text-[#1F2937]"
             style={{
               fontSize: "clamp(1.1rem, 1.8vw, 1.45rem)",
             }}
           >
             {about.copy}
-          </p>
+          </GooeyTextReveal>
         </div>
 
         {/* Capabilities */}

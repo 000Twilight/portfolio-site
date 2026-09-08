@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { gsap, ensureGsap } from "@/lib/reveal";
 import { siteContent } from "@/lib/content/site";
 import { ArrowUpRight } from "lucide-react";
+import { GooeyTextReveal } from "@/components/ui/gooey-text-reveal";
 
 interface HeroProps {
   delay?: number;
@@ -69,12 +70,13 @@ export function Hero({ delay = 0 }: HeroProps) {
 
           <div data-hero-fade className="mt-8 h-px w-20 bg-[#E5E7EB]" />
 
-          <p
-            data-hero-fade
+          <GooeyTextReveal
+            mode="immediate"
+            delay={delay + 1.8}
             className="mt-8 max-w-lg text-base sm:text-lg leading-relaxed text-[#6B7280]"
           >
             Full-stack developer and AI engineer based in Jakarta, specializing in building high-fidelity web, mobile apps, and intelligent automated workflows.
-          </p>
+          </GooeyTextReveal>
         </div>
 
         <div data-hero-fade className="flex flex-wrap items-center gap-3">
@@ -105,13 +107,9 @@ export function Hero({ delay = 0 }: HeroProps) {
             className="h-full w-full object-cover [object-position:center_20%] grayscale opacity-90 transition-all duration-700 hover:grayscale-0"
           />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#FFFFFF] via-[#FFFFFF]/85 to-transparent px-6 pt-24 pb-6 sm:px-8 sm:pb-8">
-            <p className="display text-[clamp(1.4rem,2.8vw,2.2rem)] text-[#1F2937] leading-tight">
-              {hero.spotlightTitle.split("\n").map((line: string) => (
-                <span key={line} className="block">
-                  {line}
-                </span>
-              ))}
-            </p>
+            <GooeyTextReveal mode="immediate" delay={delay + 2.5} className="display text-[clamp(1.4rem,2.8vw,2.2rem)] text-[#1F2937] leading-tight whitespace-pre-line">
+              {hero.spotlightTitle}
+            </GooeyTextReveal>
             <p className="mt-3 max-w-sm text-xs sm:text-sm text-[#6B7280] leading-relaxed">
               {hero.spotlightCopy}
             </p>

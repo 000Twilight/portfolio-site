@@ -5,6 +5,7 @@ import { useState } from "react";
 import { experienceData } from "@/lib/data/experience";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { ContactModal } from "@/components/ui/contact-modal";
+import { GooeyTextReveal } from "@/components/ui/gooey-text-reveal";
 
 export default function WorkPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,9 +26,9 @@ export default function WorkPage() {
             <p className="text-xs font-semibold uppercase tracking-widest text-[#6B7280] mb-2">
               Career & Experience
             </p>
-            <h1 className="display text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[#1F2937]">
+            <GooeyTextReveal mode="immediate" className="display text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[#1F2937]">
               Work Experience
-            </h1>
+            </GooeyTextReveal>
           </div>
           <p className="text-sm text-[#6B7280] max-w-sm">
             {experienceData.subtitle}
