@@ -6,6 +6,19 @@ import Footer from "@/components/layout/footer";
 // import LoadingScreen from "@/components/layout/loading-screen"; // disabled — SplitRevealHero is now the opening sequence
 import CursorGlow from "@/components/layout/cursor-glow";
 import NoiseOverlay from "@/components/layout/noise-overlay";
+import { Bricolage_Grotesque, DM_Sans } from "next/font/google";
+
+const bricolage = Bricolage_Grotesque({
+  subsets: ["latin"],
+  variable: "--font-bricolage",
+  display: "swap",
+});
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-dm-sans",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Mario Richie Lim | Software Engineer",
@@ -30,16 +43,10 @@ export default function RootLayout({
      * The `style` forces the page background even before CSS loads,
      * preventing any dark flash on navigation.
      */
-    <html lang="en" style={{ background: "#F9FAFB" }}>
+    <html lang="en" style={{ backgroundColor: "#F9FAFB" }}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap"
-          rel="stylesheet"
-        />
       </head>
-      <body style={{ background: "#F9FAFB" }}>
+      <body className={`${bricolage.variable} ${dmSans.variable}`} style={{ backgroundColor: "#F9FAFB" }}>
         {/* ── Global overlay stack (highest z-index first) ── */}
         {/* <LoadingScreen /> */}  {/* z-9999 — disabled: SplitRevealHero is now the opening sequence */}
         <CursorGlow />     {/* z-9998 — follows mouse */}

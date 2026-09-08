@@ -105,6 +105,7 @@ export function Hero({ delay = 0 }: HeroProps) {
             width={1024}
             height={1280}
             className="h-full w-full object-cover [object-position:center_20%] grayscale opacity-90 transition-all duration-700 hover:grayscale-0"
+            loading="lazy"
           />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#FFFFFF] via-[#FFFFFF]/85 to-transparent px-6 pt-24 pb-6 sm:px-8 sm:pb-8">
             <GooeyTextReveal mode="immediate" delay={delay + 2.5} className="display text-[clamp(1.4rem,2.8vw,2.2rem)] text-[#1F2937] leading-tight whitespace-pre-line">

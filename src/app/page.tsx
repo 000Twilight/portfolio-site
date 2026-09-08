@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import SplitRevealHero from "@/components/scenes/split-reveal-hero";
 // 🚧 KeyboardScrollSection — in development, moved to /lab for review
 // import KeyboardScrollSection from "@/components/scenes/keyboard-scroll-section";
+import dynamic from "next/dynamic";
 import { Hero } from "@/components/sections/hero";
-import { Projects } from "@/components/sections/projects";
-import { About } from "@/components/sections/about";
-import { Contact } from "@/components/sections/contact";
-import { FracturedSection } from "@/components/sections/fracture-section";
+
+const Projects = dynamic(() => import("@/components/sections/projects").then(m => m.Projects));
+const About = dynamic(() => import("@/components/sections/about").then(m => m.About));
+const Contact = dynamic(() => import("@/components/sections/contact").then(m => m.Contact));
+const FracturedSection = dynamic(() => import("@/components/sections/fracture-section").then(m => m.FracturedSection));
 import { projectsData } from "@/lib/data/projects";
 import { getFolderImagesMap } from "@/lib/get-folder-images";
 
@@ -33,6 +35,7 @@ export default function HomePage() {
 
       {/* ── Rest of the page — constrained to max-width container ── */}
       <main className="mx-auto w-full max-w-7xl px-4 sm:px-6 flex flex-col gap-4">
+        <Hero delay={5.5} />
         <Projects imagesMap={imagesMap} />
         <About />
         <Contact />

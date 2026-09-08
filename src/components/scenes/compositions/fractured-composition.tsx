@@ -210,6 +210,7 @@ export default function FracturedComposition({
           alt=""
           className="sf-frac-img sf-depth-orig"
           draggable={false}
+          loading="lazy"
         />
       </div>
 
@@ -225,6 +226,7 @@ export default function FracturedComposition({
             alt=""
             className={`sf-frac-img sf-depth-${pieceRealities[i]}`}
             draggable={false}
+            loading="lazy"
           />
         </div>
       ))}
@@ -235,6 +237,7 @@ export default function FracturedComposition({
         viewBox="0 0 100 100"
         preserveAspectRatio="none"
         aria-hidden="true"
+        focusable="false"
       >
         {/* Dark shadow seam -- physical depth */}
         {SHARD_DATA.seams.map((pts, i) => (
@@ -261,7 +264,11 @@ export default function FracturedComposition({
             key={`hit-${shard.id}`}
             points={shard.svgPoints}
             className="sf-frac-hit"
-            onClick={() => handleShardClick(i)}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleShardClick(i);
+            }}
             aria-label={`Shard ${i + 1} -- click to shift reality`}
           />
         ))}

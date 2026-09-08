@@ -12,7 +12,7 @@ export default function ParallaxImage({
     src,
     alt = "",
     className = "",
-    loading = "eager",
+    loading = "lazy",
 }: ParallaxImageProps) {
     return (
         <img

@@ -6,7 +6,7 @@ import { siteContent } from "@/lib/content/site";
 import { GooeyTextReveal } from "@/components/ui/gooey-text-reveal";
 
 export function About() {
-  const ref   = useReveal<HTMLElement>();
+  const ref = useReveal<HTMLElement>();
   const about = siteContent.about;
 
   // ── count-up for metrics ────────────────────────────────────────────────
@@ -103,7 +103,7 @@ export function About() {
           By the numbers
         </p>
 
-        <dl data-reveal className="grid grid-cols-2 gap-8 my-auto">
+        <dl data-reveal className="grid grid-cols-2 gap-4 sm:gap-8 my-auto">
           {about.metrics.map(({ value, suffix, label }) => (
             <div key={label} className="flex flex-col">
               <dt

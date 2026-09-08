@@ -58,20 +58,34 @@ export default function SplitRevealHero({
   // ── In-scene chrome ──────────────────────────────────────────────────────
   logo = "MRL",
   tags = ["Full-Stack Dev", "Building What Matters", "Jakarta · 2026"],
-  heroImage = "/assets/images/image.jpeg",
-  heroImage2 = "/assets/images/image_2.jpeg",
-  heroImage3 = "/assets/images/image_3.jpeg",
   menuLabel = "Portfolio",
   footerLeft = "Scroll Down",
   footerRight = "Design · Code · Craft",
   className = "",
 }: SplitRevealHeroProps) {
   const rootRef = useRef<HTMLElement>(null);
-  const [sliderVisible, setSliderVisible] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
 
   useLayoutEffect(() => {
     const root = rootRef.current;
     if (!root) return;
+
+    // Force scroll to top and lock scrolling aggressively
+    window.scrollTo(0, 0);
+    const originalBodyOverflow = document.body.style.overflow;
+    const originalHtmlOverflow = document.documentElement.style.overflow;
+
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+
+    const lockScroll = (e: Event) => {
+      e.preventDefault();
+      window.scrollTo(0, 0);
+    };
+
+    window.addEventListener("scroll", lockScroll, { passive: false });
+    window.addEventListener("wheel", lockScroll, { passive: false });
+    window.addEventListener("touchmove", lockScroll, { passive: false });
 
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -332,9 +346,14 @@ export default function SplitRevealHero({
         }
       });
 
-      // Show slider controls after the full reveal completes
-      later(7200, () => {
-        setSliderVisible(true);
+      // Unmount overlay after the full reveal completes
+      later(6800, () => {
+        document.body.style.overflow = originalBodyOverflow;
+        document.documentElement.style.overflow = originalHtmlOverflow;
+        window.removeEventListener("scroll", lockScroll);
+        window.removeEventListener("wheel", lockScroll);
+        window.removeEventListener("touchmove", lockScroll);
+        setIsComplete(true);
       });
     };
 
@@ -344,6 +363,12 @@ export default function SplitRevealHero({
     });
 
     return () => {
+      document.body.style.overflow = originalBodyOverflow;
+      document.documentElement.style.overflow = originalHtmlOverflow;
+      window.removeEventListener("scroll", lockScroll);
+      window.removeEventListener("wheel", lockScroll);
+      window.removeEventListener("touchmove", lockScroll);
+
       cancelled = true;
       window.cancelAnimationFrame(frame);
       animations.forEach((animation) => animation.cancel());
@@ -352,6 +377,8 @@ export default function SplitRevealHero({
   }, []);
 
 
+
+  if (isComplete) return null;
 
   return (
     <section ref={rootRef} className={`sf-root ${className}`}>
@@ -365,34 +392,6 @@ export default function SplitRevealHero({
             {splitWords(tag)}
           </p>
         ))}
-      </div>
-
-      {/* Full-bleed scene — reveals via clip-path split animation */}
-      <div className="sf-scene">
-
-        <div className="h-full w-full max-w-7xl mx-auto px-4 sm:px-6 flex flex-col justify-center">
-          <Hero delay={5.5} />
-        </div>
-
-        {/* In-scene top navigation */}
-        <nav className="sf-nav">
-          <strong>{logo}</strong>
-          <span>{menuLabel}</span>
-        </nav>
-
-        <footer className="sf-footer">
-          {/* Clicking "Scroll Down" jumps to the Hero section below */}
-          <a
-            href="#top"
-            className="sf-footer-cta"
-            aria-label="Scroll down to hero section"
-          >
-            {footerLeft}
-            <span className="sf-footer-arrow" aria-hidden="true">↓</span>
-          </a>
-          <span>{footerRight}</span>
-        </footer>
-
       </div>
     </section>
   );
