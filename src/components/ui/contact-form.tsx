@@ -5,7 +5,7 @@ import { Send } from "lucide-react";
 
 const PROJECT_TYPES = [
   "Full-Stack Web",
-  "Mobile App (React Native/Flutter)",
+  "Mobile App",
   "AI & Automation",
   "UI/UX Design",
   "Other",

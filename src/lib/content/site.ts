@@ -9,6 +9,7 @@ export const siteContent = {
     links: [
       { label: "Projects", href: "/projects" },
       { label: "Work", href: "/work" },
+      { label: "Organizations", href: "/organizations" },
       { label: "Now", href: "/now" },
       { label: "Uses", href: "/uses" },
     ],
@@ -45,7 +46,7 @@ export const siteContent = {
     ],
   },
   marquee: {
-    words: ["Interfaces", "Systems", "Motion", "Typography", "Craft"],
+    words: ["Full-Stack", "Mobile Apps", "System Design", "AI Integration", "Automation"],
   },
   contact: {
     title: "Let's build something\nworth looking at.",

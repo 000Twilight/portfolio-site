@@ -14,6 +14,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { markInitialLoadComplete } from "@/lib/store/intro-store";
+import { ContactModal } from "@/components/ui/contact-modal";
 
 export function Nav() {
   const ref = useRef<HTMLElement>(null);
@@ -21,6 +22,7 @@ export function Nav() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
 
   // ── scroll-aware glass backdrop ──────────────────────────────────────────
   useEffect(() => {
@@ -119,9 +121,11 @@ export function Nav() {
         <div className="flex items-center gap-2">
           {/* ── CTA pill ─────────────────────────────────────────────────────── */}
           <div data-nav-item>
-            <Link
-              href="/contact"
-              onClick={() => setIsMobileMenuOpen(false)}
+            <button
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                setIsContactModalOpen(true);
+              }}
               className="group flex h-10 items-center gap-2 rounded-full px-5 text-xs font-semibold bg-[#1F2937] text-[#F9FAFB] shadow-xs transition-all duration-200 hover:bg-[#111827] hover:scale-[1.02] active:scale-[0.98]"
             >
               {/* Pulse dot */}
@@ -137,7 +141,7 @@ export function Nav() {
               </span>
               <span className="hidden sm:inline">{nav.availableLabel}</span>
               <span className="sm:hidden">Available</span>
-            </Link>
+            </button>
           </div>
 
           {/* ── Mobile menu toggle ─────────────────────────────────────────── */}
@@ -179,6 +183,10 @@ export function Nav() {
           })}
         </div>
       </div>
+      <ContactModal 
+        isOpen={isContactModalOpen} 
+        onClose={() => setIsContactModalOpen(false)} 
+      />
     </>
   );
 }
