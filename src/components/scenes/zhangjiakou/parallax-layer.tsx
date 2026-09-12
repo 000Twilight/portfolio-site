@@ -1,3 +1,5 @@
+"use client";
+
 import {
     useContext,
     useLayoutEffect,
@@ -6,7 +8,7 @@ import {
     type ReactNode,
 } from "react";
 
-import { ParallaxContext } from "./ParallaxContext";
+import { ParallaxContext } from "./parallax-context";
 
 export interface ParallaxLayerProps {
     children: ReactNode;

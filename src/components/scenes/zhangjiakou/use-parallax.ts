@@ -1,7 +1,8 @@
-// import { type RefObject } from "react";
+"use client";
+
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import type { RegisteredParallaxLayer } from "./ParallaxContext";
+import type { RegisteredParallaxLayer } from "./parallax-context";
 
 export function useParallax({
     sectionRef,

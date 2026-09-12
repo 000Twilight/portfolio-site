@@ -7,8 +7,10 @@ import {
   Clock, 
   MapPin, 
   Sparkles,
+  ArrowUpRight,
+  FileText,
 } from "lucide-react";
-import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { ContactForm } from "@/components/ui/contact-form";
 
 const PROJECT_TYPES = [
@@ -86,43 +88,55 @@ export function Contact() {
             {/* Social Links Card */}
             <div className="rounded-2xl bg-[#F9FAFB] border border-[#E5E7EB] p-6 shadow-xs">
               <span className="text-xs font-semibold uppercase tracking-wider text-[#6B7280] block mb-4">
-                Connect Elsewhere
+                Connect & Credentials
               </span>
               <div className="flex flex-col gap-3">
                 <a
-                  href="https://github.com"
+                  href="https://github.com/000Twilight"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center gap-3 rounded-xl bg-white border border-[#E5E7EB] px-4 py-3 shadow-xs transition-all duration-200 hover:bg-[#F3F4F6] hover:border-[#D1D5DB]"
+                  className="group flex items-center justify-between rounded-xl bg-white border border-[#E5E7EB] px-4 py-3 shadow-xs transition-all duration-200 hover:bg-[#F3F4F6] hover:border-[#D1D5DB]"
                 >
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#F3F4F6] text-[#4B5563] group-hover:bg-white group-hover:text-[#1F2937] transition-colors">
-                    <FaGithub size={16} />
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#F3F4F6] text-[#4B5563] group-hover:bg-white group-hover:text-[#1F2937] transition-colors">
+                      <FaGithub size={16} />
+                    </div>
+                    <span className="text-sm font-medium text-[#1F2937]">GitHub</span>
                   </div>
-                  <span className="text-sm font-medium text-[#1F2937]">GitHub</span>
+                  <ArrowUpRight size={14} className="text-[#9CA3AF] group-hover:text-[#1F2937]" />
                 </a>
                 
                 <a
-                  href="https://linkedin.com"
+                  href="https://linkedin.com/in/mario-richie-lim"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center gap-3 rounded-xl bg-white border border-[#E5E7EB] px-4 py-3 shadow-xs transition-all duration-200 hover:bg-[#F3F4F6] hover:border-[#D1D5DB]"
+                  className="group flex items-center justify-between rounded-xl bg-white border border-[#E5E7EB] px-4 py-3 shadow-xs transition-all duration-200 hover:bg-[#F3F4F6] hover:border-[#D1D5DB]"
                 >
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#F3F4F6] text-[#4B5563] group-hover:bg-white group-hover:text-[#0077b5] transition-colors">
-                    <FaLinkedin size={16} />
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#F3F4F6] text-[#4B5563] group-hover:bg-white group-hover:text-[#0077b5] transition-colors">
+                      <FaLinkedin size={16} />
+                    </div>
+                    <span className="text-sm font-medium text-[#1F2937]">LinkedIn</span>
                   </div>
-                  <span className="text-sm font-medium text-[#1F2937]">LinkedIn</span>
+                  <ArrowUpRight size={14} className="text-[#9CA3AF] group-hover:text-[#0077b5]" />
                 </a>
 
                 <a
-                  href="https://twitter.com"
+                  href="/Mario-Richie-Lim-CV.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center gap-3 rounded-xl bg-white border border-[#E5E7EB] px-4 py-3 shadow-xs transition-all duration-200 hover:bg-[#F3F4F6] hover:border-[#D1D5DB]"
+                  className="group flex items-center justify-between rounded-xl bg-white border border-emerald-200/80 bg-emerald-50/20 px-4 py-3 shadow-xs transition-all duration-200 hover:bg-emerald-50 hover:border-emerald-300"
                 >
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#F3F4F6] text-[#4B5563] group-hover:bg-white group-hover:text-[#1DA1F2] transition-colors">
-                    <FaTwitter size={16} />
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                      <FileText size={16} />
+                    </div>
+                    <div>
+                      <span className="text-sm font-medium text-[#1F2937] block">Curriculum Vitae</span>
+                      <span className="text-[11px] text-[#6B7280]">Download Official PDF</span>
+                    </div>
                   </div>
-                  <span className="text-sm font-medium text-[#1F2937]">Twitter</span>
+                  <ArrowUpRight size={14} className="text-emerald-600" />
                 </a>
               </div>
             </div>

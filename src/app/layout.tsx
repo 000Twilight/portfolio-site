@@ -50,10 +50,10 @@ export default function RootLayout({
      * The `style` forces the page background even before CSS loads,
      * preventing any dark flash on navigation.
      */
-    <html lang="en" style={{ backgroundColor: "#F9FAFB" }}>
+    <html lang="en">
       <head>
       </head>
-      <body className={`${bricolage.variable} ${dmSans.variable} ${fancyFont.variable} overflow-x-hidden`} style={{ backgroundColor: "#F9FAFB" }}>
+      <body className={`${bricolage.variable} ${dmSans.variable} ${fancyFont.variable} overflow-x-hidden bg-[#F9FAFB]`}>
         {/* ── Global overlay stack (highest z-index first) ── */}
         {/* <LoadingScreen /> */}  {/* z-9999 — disabled: SplitRevealHero is now the opening sequence */}
         <CursorGlow />     {/* z-9998 — follows mouse */}

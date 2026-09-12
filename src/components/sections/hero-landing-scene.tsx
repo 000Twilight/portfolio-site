@@ -3,10 +3,10 @@
 import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import ParallaxSection from "@/components/parallax/ParallaxSection";
-import ParallaxLayer from "@/components/parallax/ParallaxLayer";
-import { useFloating } from "@/components/parallax/UseFloating";
-import { useReducedMotion } from "@/components/parallax/useReducedMotion";
+import ParallaxSection from "@/components/scenes/zhangjiakou/parallax-section";
+import ParallaxLayer from "@/components/scenes/zhangjiakou/parallax-layer";
+import { useFloating } from "@/components/scenes/zhangjiakou/use-floating";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 export default function HeroLandingScene() {
     const containerRef = useRef<HTMLDivElement>(null);

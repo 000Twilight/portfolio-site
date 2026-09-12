@@ -4,7 +4,6 @@ export interface OrganizationItem {
   period: string;
   description: string[];
   tags: string[];
-  type: "Inside Campus" | "Outside Campus";
 }
 
 export const organizationsData = {
@@ -19,7 +18,6 @@ export const organizationsData = {
         "Enhanced engagement: Coordinated Valorant e-sports competition logistics, including game rules, scheduling, and participant communication via Discord, that resulted in a 30% increase in participant satisfaction."
       ],
       tags: ["Event Coordination", "E-sports", "Discord Management", "Communication"],
-      type: "Inside Campus"
     },
     {
       organization: "MIP Awards 8",
@@ -29,7 +27,6 @@ export const organizationsData = {
         "Secured vital funding: Collaborated with the team on cold outreach to 10+ companies and pitches to responsive organizations, contributing to the team's acquisition of over 50 sponsorships for the event, including securing 5+ sponsorships."
       ],
       tags: ["Sponsorship", "Cold Outreach", "Pitching", "Fundraising"],
-      type: "Inside Campus"
     },
     {
       organization: "Obscura Exhibition 2024",
@@ -39,7 +36,6 @@ export const organizationsData = {
         "Handled event rules, flow, and safety as a security team member to ensure smooth D-day operations."
       ],
       tags: ["Security", "Event Operations", "Crowd Control", "Logistics"],
-      type: "Inside Campus"
     },
     {
       organization: "UMN ECO 2023",
@@ -49,7 +45,15 @@ export const organizationsData = {
         "Developed the front-end part for the organization's website using Laravel, PHP, Bootstrap and CSS, creating a more intuitive and engaging online platform increasing user engagement by 20%."
       ],
       tags: ["Frontend Development", "Laravel", "Bootstrap", "Web Design"],
-      type: "Inside Campus"
+    },
+    {
+      organization: "Tunas Bangsa Christian School",
+      role: "Member of the Student Council (OSIS)",
+      period: "February 2018 - March 2020",
+      description: [
+        "Served as a member of OSIS during Junior/Senior high school."
+      ],
+      tags: ["Student Council", "Event Organization", "Leadership"],
     }
   ] as OrganizationItem[],
 };

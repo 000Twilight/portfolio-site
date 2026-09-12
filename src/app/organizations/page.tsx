@@ -65,9 +65,6 @@ export default function OrganizationsPage() {
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="rounded-full bg-[#E5E7EB] px-3 py-1 text-xs font-semibold text-[#1F2937] shrink-0">
-                  {item.type}
-                </span>
                 <span className="rounded-full bg-[#F3F4F6] border border-[#E5E7EB] px-4 py-1.5 text-xs font-mono text-[#6B7280] shrink-0">
                   {item.period}
                 </span>

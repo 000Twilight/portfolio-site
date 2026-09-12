@@ -1,7 +1,9 @@
+"use client";
+
 import { useRef, type RefObject } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { useReducedMotion } from "./useReducedMotion";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 export interface FloatingConfig {
     yOffset?: number;

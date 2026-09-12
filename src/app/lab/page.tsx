@@ -1,19 +1,17 @@
 import type { Metadata } from "next";
 import { FlaskConical, Construction, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { ZhangjiakouCard } from "./zhangjiakou-card";
+import { CoverLetterCard } from "./cover-letter-card";
 
 export const metadata: Metadata = {
-  title: "Lab — WIP | Mario Richie Lim",
-  description: "Experimental components and work in progress.",
+  title: "Lab — Experiments & Tools | Mario Richie Lim",
+  description: "Experimental components, 3D scenes, AI tools, and work in progress.",
   robots: { index: false, follow: false },
 };
 
 /**
- * /lab — a holding page for experiments that are still being built.
- *
- * KeyboardScrollSection lives here so it's accessible for dev review
- * without appearing on the public portfolio. Uncomment the import below
- * and the component render once it's ready to ship.
+ * /lab — a holding page for experiments, interactive scenes, and AI tools.
  */
 
 // 🚧 IN DEVELOPMENT — uncomment when ready to integrate
@@ -35,19 +33,23 @@ export default function LabPage() {
       <div className="mb-16">
         <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 bg-amber-50 border border-amber-200 text-xs font-medium text-amber-700 mb-6">
           <Construction size={12} />
-          Work in Progress
+          Work in Progress & Experiments
         </div>
         <h1 className="text-[clamp(2rem,5vw,3.5rem)] font-bold tracking-tight text-[#1F2937] leading-none mb-4">
           The Lab
         </h1>
         <p className="text-[#6B7280] max-w-md leading-relaxed">
-          Experimental components under active development. These live here so
-          they can be reviewed and iterated on before shipping to the main portfolio.
+          Experimental components, interactive 3D scenes, and AI tools under active development.
         </p>
       </div>
 
       {/* Experiments list */}
       <div className="flex flex-col gap-6">
+        {/* AI Cover Letter Studio */}
+        <CoverLetterCard />
+
+        {/* Zhangjiakou 2.5D Scene */}
+        <ZhangjiakouCard />
         {/* KeyboardScrollSection — 🚧 IN DEVELOPMENT */}
         <div className="relative rounded-3xl border border-dashed border-amber-300 bg-amber-50/40 p-8 overflow-hidden">
           {/* Corner badge */}
@@ -62,16 +64,21 @@ export default function LabPage() {
             </div>
             <div>
               <h2 className="text-lg font-semibold text-[#1F2937] mb-1">
-                Keyboard Scroll Section
+                Keyboard Scroll Experience
               </h2>
               <p className="text-sm text-[#6B7280] leading-relaxed mb-4">
-                An interactive 3D mechanical keyboard scroll experience. The
-                animation sequence is still being tuned — timing, easing, and
-                mobile behaviour are a work in progress.
+                A cinema-grade scroll-driven animation powered by a video-to-frames pipeline. High-resolution 3D renders are decomposed into sequential frames and scrubbed dynamically against user scroll velocity. Currently fine-tuning frame compression, mobile buffering, and canvas rendering.
               </p>
               <div className="flex flex-wrap gap-2 text-xs font-mono">
-                <span className="rounded-full bg-white border border-amber-200 px-2.5 py-1 text-amber-700">KeyboardScrollSection.tsx</span>
-                <span className="rounded-full bg-white border border-[#E5E7EB] px-2.5 py-1 text-[#6B7280]">KeyboardScrollSection.css</span>
+                <span className="rounded-full bg-white border border-amber-200 px-3 py-1 text-amber-800">
+                  Video-to-Frames Pipeline
+                </span>
+                <span className="rounded-full bg-white border border-amber-200 px-3 py-1 text-amber-800">
+                  Canvas Scroll Scrubbing
+                </span>
+                <span className="rounded-full bg-white border border-[#E5E7EB] px-3 py-1 text-[#6B7280]">
+                  Frame Preloading & Tuning
+                </span>
               </div>
             </div>
           </div>

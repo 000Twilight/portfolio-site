@@ -31,7 +31,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import { useReducedMotion } from "@/components/parallax/useReducedMotion";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 // ─── timing constants (seconds) ────────────────────────────────────────────
 const ENTER_DELAY   = 0.05;

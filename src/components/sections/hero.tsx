@@ -3,8 +3,9 @@
 import { useEffect, useRef } from "react";
 import { gsap, ensureGsap } from "@/lib/reveal";
 import { siteContent } from "@/lib/content/site";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, FileText } from "lucide-react";
 import { GooeyTextReveal } from "@/components/ui/gooey-text-reveal";
+import SlideTextButton from "@/components/ui/slide-text-button";
 import { isInitialLoad } from "@/lib/store/intro-store";
 
 interface HeroProps {
@@ -14,7 +15,7 @@ interface HeroProps {
 export function Hero({ delay = 0 }: HeroProps) {
   const ref = useRef<HTMLElement>(null);
   const hero = siteContent.hero;
-  
+
   // Use a small default delay for client-side navigation
   const actualDelay = isInitialLoad ? delay : 0.2;
 
@@ -59,24 +60,20 @@ export function Hero({ delay = 0 }: HeroProps) {
       {/* ── Left Hero Panel ──────────────────────────────────────────────── */}
       <div className="flex flex-col justify-between gap-12 rounded-3xl bg-white border border-[#E5E7EB] p-8 sm:p-12 shadow-[0_1px_3px_0_rgba(0,0,0,0.02)]">
         <div>
-          <div data-hero-fade className="inline-flex items-center gap-2 rounded-full px-3 py-1 bg-[#F3F4F6] border border-[#E5E7EB] text-xs font-medium text-[#6B7280] mb-6">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#22c55e]" />
-            Software Engineer & AI Builder
+          <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 bg-[#F3F4F6] border border-[#E5E7EB] text-xs font-medium text-[#4B5563] mb-8">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            {siteContent.nav.availableLabel}
           </div>
 
-          <h1 className="display text-[clamp(2.75rem,6.5vw,5rem)] leading-none text-[#1F2937]">
-            {[hero.firstName, hero.lastName].map((line) => (
-              <span key={line} data-hero-line className="block overflow-hidden pb-1">
-                <span className="block">{line}</span>
-              </span>
-            ))}
+          <h1 className="display text-[clamp(3rem,8vw,6rem)] font-bold tracking-tight text-[#1F2937] leading-[1.05]">
+            <div data-hero-line className="overflow-hidden">
+              <span className="block">Mario Richie Lim</span>
+            </div>
           </h1>
-
-          <div data-hero-fade className="mt-8 h-px w-20 bg-[#E5E7EB]" />
 
           <GooeyTextReveal
             mode="immediate"
-            delay={actualDelay + 1.8}
+            delay={actualDelay + 0.8}
             className="mt-8 max-w-lg text-base sm:text-lg leading-relaxed text-[#6B7280]"
           >
             Full-stack developer and AI engineer based in Jakarta, specializing in building high-fidelity web, mobile apps, and intelligent automated workflows.
@@ -84,19 +81,26 @@ export function Hero({ delay = 0 }: HeroProps) {
         </div>
 
         <div data-hero-fade className="flex flex-wrap items-center gap-3">
-          <a
+          <SlideTextButton
             href="#projects"
-            className="group inline-flex items-center gap-2 rounded-full bg-[#1F2937] px-7 py-3.5 text-sm font-semibold text-[#F9FAFB] shadow-xs transition-all duration-200 hover:bg-[#111827] hover:scale-[1.02] active:scale-[0.98]"
-          >
-            {hero.primaryCta}
-            <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </a>
-          <a
-            href="#contact"
-            className="inline-flex items-center rounded-full bg-white border border-[#E5E7EB] px-7 py-3.5 text-sm font-semibold text-[#1F2937] transition-all duration-200 hover:bg-[#F3F4F6] hover:border-[#D1D5DB]"
-          >
-            {hero.secondaryCta}
-          </a>
+            text={hero.primaryCta}
+            hoverText="Explore projects"
+            icon={<ArrowUpRight size={16} />}
+            iconPlacement="right"
+            variant="custom"
+            className="rounded-full bg-[#1F2937] px-7 py-3.5 text-sm font-semibold text-[#F9FAFB] shadow-xs hover:bg-[#111827] border-0"
+          />
+          <SlideTextButton
+            href="/Mario-Richie-Lim-CV.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            text="Resume / CV"
+            hoverText="Download PDF"
+            icon={<FileText size={16} className="text-[#6B7280]" />}
+            iconPlacement="left"
+            variant="custom"
+            className="rounded-full bg-white border border-[#E5E7EB] px-7 py-3.5 text-sm font-semibold text-[#1F2937] hover:bg-[#F3F4F6] hover:border-[#D1D5DB]"
+          />
         </div>
       </div>
 

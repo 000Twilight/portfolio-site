@@ -1,3 +1,5 @@
+"use client";
+
 interface ParallaxImageProps {
     src: string;
 

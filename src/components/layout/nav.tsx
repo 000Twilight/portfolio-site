@@ -12,8 +12,8 @@ import { gsap, ensureGsap } from "@/lib/reveal";
 import { siteContent } from "@/lib/content/site";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
-import { markInitialLoadComplete } from "@/lib/store/intro-store";
+import { Menu, X, FileText, ArrowUpRight } from "lucide-react";
+import { markInitialLoadComplete, isInitialLoad } from "@/lib/store/intro-store";
 import { ContactModal } from "@/components/ui/contact-modal";
 
 export function Nav() {
@@ -26,14 +26,17 @@ export function Nav() {
 
   // ── scroll-aware glass backdrop ──────────────────────────────────────────
   useEffect(() => {
+    if (pathname.startsWith("/lab/")) return;
     const onScroll = () => setScrolled(window.scrollY > 24);
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll(); // sync on mount
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [pathname]);
 
   // ── entrance animation ───────────────────────────────────────────────────
   useEffect(() => {
+    if (pathname.startsWith("/lab/") || !ref.current) return;
+
     // Mark the initial load as complete shortly after mount so that subsequent navigations
     // know they are client-side navigations.
     const timer = setTimeout(() => {
@@ -42,23 +45,31 @@ export function Nav() {
 
     ensureGsap();
     const ctx = gsap.context(() => {
-      gsap.from("[data-nav-item]", {
+      const items = ref.current?.querySelectorAll("[data-nav-item]");
+      if (!items || items.length === 0) return;
+
+      gsap.from(items, {
         opacity: 0,
         y: -16,
         duration: 0.8,
         ease: "power3.out",
         stagger: 0.07,
-        delay: 3.2, // fires after LoadingScreen exit (~3s)
+        delay: isInitialLoad ? 0.2 : 0, // fixed outdated 3.2s loading screen delay
       });
     }, ref);
+
     return () => {
       clearTimeout(timer);
       ctx.revert();
     };
-  }, []);
+  }, [pathname]);
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href.replace("/#", "/"));
+
+  if (pathname.startsWith("/lab/")) {
+    return null;
+  }
 
   return (
     <>
@@ -181,6 +192,20 @@ export function Nav() {
               </Link>
             );
           })}
+          <div className="my-1 h-px w-full bg-[#E5E7EB]" />
+          <a
+            href="/Mario-Richie-Lim-CV.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="flex h-12 items-center justify-between rounded-xl px-4 text-sm font-semibold text-emerald-700 bg-emerald-50/70 hover:bg-emerald-100/80 transition-all duration-200"
+          >
+            <div className="flex items-center gap-2">
+              <FileText size={16} />
+              <span>Download CV (PDF)</span>
+            </div>
+            <ArrowUpRight size={15} />
+          </a>
         </div>
       </div>
       <ContactModal 

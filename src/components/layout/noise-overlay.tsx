@@ -43,7 +43,7 @@
  */
 
 import { useEffect, useRef } from "react";
-import { useReducedMotion } from "@/components/parallax/useReducedMotion";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 // ─── types ─────────────────────────────────────────────────────────────────
 interface NoiseOverlayProps {

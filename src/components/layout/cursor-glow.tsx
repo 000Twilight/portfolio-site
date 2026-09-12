@@ -35,7 +35,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import { useReducedMotion } from "@/components/parallax/useReducedMotion";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 // ─── config ────────────────────────────────────────────────────────────────
 /** Diameter of the glow orb in pixels. */

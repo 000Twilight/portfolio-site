@@ -5,6 +5,8 @@ import SocialFlipButton from "@/components/ui/social-flip-button";
 import { FaInstagram, FaGithub, FaLinkedin } from "react-icons/fa";
 import { Mail, ArrowUpRight } from "lucide-react";
 
+import { usePathname } from "next/navigation";
+
 const { contact } = siteContent;
 
 const getSocialIcon = (label: string) => {
@@ -21,6 +23,11 @@ const getSocialIcon = (label: string) => {
 };
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  if (pathname.startsWith("/lab/")) {
+    return null;
+  }
   const socialItems = contact.socialLinks.map((link) => ({
     letter: <ArrowUpRight size={16} />,
     icon: getSocialIcon(link.label),
@@ -42,7 +49,8 @@ export default function Footer() {
             </p>
           </div>
 
-          <div className="shrink-0">
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
+
             <SocialFlipButton items={socialItems} className="!p-0" />
           </div>
         </div>

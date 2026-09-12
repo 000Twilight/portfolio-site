@@ -1,7 +1,9 @@
+"use client";
+
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ParallaxContext, type RegisteredParallaxLayer } from "./ParallaxContext";
-import { useParallax } from "./useParallax";
-import { useReducedMotion } from "./useReducedMotion";
+import { ParallaxContext, type RegisteredParallaxLayer } from "./parallax-context";
+import { useParallax } from "./use-parallax";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 interface ParallaxSectionProps {
     children?: React.ReactNode;

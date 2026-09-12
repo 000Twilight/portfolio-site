@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { useState } from "react";
 import { experienceData } from "@/lib/data/experience";
-import { ArrowLeft, ArrowUpRight } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, FileText } from "lucide-react";
 import { ContactModal } from "@/components/ui/contact-modal";
 import { GooeyTextReveal } from "@/components/ui/gooey-text-reveal";
+import SlideTextButton from "@/components/ui/slide-text-button";
 
 export default function WorkPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,18 +22,33 @@ export default function WorkPage() {
           Back to home
         </Link>
 
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-[#6B7280] mb-2">
-              Career & Experience
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
+          <div className="flex flex-col gap-4">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-[#6B7280] mb-2">
+                Career & Experience
+              </p>
+              <GooeyTextReveal mode="immediate" className="display text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[#1F2937]">
+                Work Experience
+              </GooeyTextReveal>
+            </div>
+            <p className="text-sm text-[#6B7280] max-w-lg">
+              {experienceData.subtitle}
             </p>
-            <GooeyTextReveal mode="immediate" className="display text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[#1F2937]">
-              Work Experience
-            </GooeyTextReveal>
           </div>
-          <p className="text-sm text-[#6B7280] max-w-sm">
-            {experienceData.subtitle}
-          </p>
+          <div className="flex-shrink-0">
+            <SlideTextButton
+              href="/Mario-Richie-Lim-CV.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              text="Download CV (PDF)"
+              hoverText="Get PDF"
+              icon={<FileText size={14} />}
+              iconPlacement="left"
+              variant="custom"
+              className="rounded-xl bg-[#1F2937] px-4 py-2.5 text-xs font-semibold text-white shadow-xs hover:bg-black hover:shadow-md"
+            />
+          </div>
         </div>
 
         {/* Decorative line */}

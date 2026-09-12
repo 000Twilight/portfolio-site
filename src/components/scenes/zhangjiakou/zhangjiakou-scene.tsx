@@ -1,6 +1,8 @@
-import ParallaxSection from "../parallax/ParallaxSection";
-import ParallaxLayer from "../parallax/ParallaxLayer";
-import ParallaxImage from "../parallax/ParallaxImage";
+"use client";
+
+import ParallaxSection from "./parallax-section";
+import ParallaxLayer from "./parallax-layer";
+import ParallaxImage from "./parallax-image";
 
 export default function ZhangjiakouScene() {
     return (
