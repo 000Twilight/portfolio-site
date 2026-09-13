@@ -1,25 +1,116 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import ParallaxSection from "./parallax-section";
 import ParallaxLayer from "./parallax-layer";
 import ParallaxImage from "./parallax-image";
 
+const ZHANGJIAKOU_IMAGES = [
+    "/assets/images/zhangjiakou/background.png",
+    "/assets/images/zhangjiakou/fog-7.png",
+    "/assets/images/zhangjiakou/mountain-10.png",
+    "/assets/images/zhangjiakou/fog-6.png",
+    "/assets/images/zhangjiakou/mountain-9.png",
+    "/assets/images/zhangjiakou/mountain-8.png",
+    "/assets/images/zhangjiakou/fog-5.png",
+    "/assets/images/zhangjiakou/mountain-7.png",
+    "/assets/images/zhangjiakou/mountain-6.png",
+    "/assets/images/zhangjiakou/fog-4.png",
+    "/assets/images/zhangjiakou/mountain-5.png",
+    "/assets/images/zhangjiakou/fog-3.png",
+    "/assets/images/zhangjiakou/mountain-4.png",
+    "/assets/images/zhangjiakou/mountain-3.png",
+    "/assets/images/zhangjiakou/fog-2.png",
+    "/assets/images/zhangjiakou/mountain-2.png",
+    "/assets/images/zhangjiakou/mountain-1.png",
+    "/assets/images/zhangjiakou/sun-rays.png",
+    "/assets/images/zhangjiakou/black-shadow.png",
+    "/assets/images/zhangjiakou/fog-1.png",
+];
+
 export default function ZhangjiakouScene() {
+    const [loadedCount, setLoadedCount] = useState(0);
+    const [isReady, setIsReady] = useState(false);
+    const [showLoader, setShowLoader] = useState(true);
+
+    useEffect(() => {
+        let isMounted = true;
+        let completed = 0;
+        const total = ZHANGJIAKOU_IMAGES.length;
+
+        const handleImageComplete = () => {
+            if (!isMounted) return;
+            completed++;
+            setLoadedCount(completed);
+
+            if (completed >= total) {
+                // Short buffer to let the user see 100% completion before smooth reveal
+                setTimeout(() => {
+                    if (!isMounted) return;
+                    setIsReady(true);
+                    setTimeout(() => {
+                        if (!isMounted) return;
+                        setShowLoader(false);
+                    }, 700);
+                }, 250);
+            }
+        };
+
+        ZHANGJIAKOU_IMAGES.forEach((src) => {
+            const img = new Image();
+            img.src = src;
+
+            if (img.complete) {
+                if ("decode" in img) {
+                    img.decode()
+                        .then(() => handleImageComplete())
+                        .catch(() => handleImageComplete());
+                } else {
+                    handleImageComplete();
+                }
+            } else {
+                img.onload = () => {
+                    if ("decode" in img) {
+                        img.decode()
+                            .then(() => handleImageComplete())
+                            .catch(() => handleImageComplete());
+                    } else {
+                        handleImageComplete();
+                    }
+                };
+                img.onerror = () => handleImageComplete();
+            }
+        });
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+
+    const progress = Math.min(100, Math.round((loadedCount / ZHANGJIAKOU_IMAGES.length) * 100));
+
     return (
-        <ParallaxSection
-            intensity={1}
-            smoothing={0.6}
-            perspective={2300}
-            movementRange={{
-                x: 400,
-                y: 280,
-            }}
-            designWidth={1920}
-            designHeight={1080}
-            introAnimation
-            responsive
-            fitMode="cover"
-        >
+        <div className="relative w-full h-full overflow-hidden bg-[#070b12]">
+            {/* Parallax Scene Container - smoothly reveals once all images are ready */}
+            <div
+                className={`w-full h-full transition-opacity duration-700 ease-out ${
+                    isReady ? "opacity-100" : "opacity-0 pointer-events-none"
+                }`}
+            >
+                <ParallaxSection
+                    intensity={1}
+                    smoothing={0.6}
+                    perspective={2300}
+                    movementRange={{
+                        x: 400,
+                        y: 280,
+                    }}
+                    designWidth={1920}
+                    designHeight={1080}
+                    introAnimation
+                    responsive
+                    fitMode="cover"
+                >
             {/* =====================================================
                 BACKGROUND
             ====================================================== */}
@@ -41,7 +132,7 @@ export default function ZhangjiakouScene() {
                 zIndex={1}
             >
                 <ParallaxImage
-                    src="https://i.ibb.co/9mHk68Gj/background.png"
+                    src="/assets/images/zhangjiakou/background.png"
                 />
             </ParallaxLayer>
 
@@ -66,7 +157,7 @@ export default function ZhangjiakouScene() {
                 zIndex={2}
             >
                 <ParallaxImage
-                    src="https://i.ibb.co/DHhNwG0X/fog-7.png"
+                    src="/assets/images/zhangjiakou/fog-7.png"
                 />
             </ParallaxLayer>
 
@@ -91,7 +182,7 @@ export default function ZhangjiakouScene() {
                 zIndex={3}
             >
                 <ParallaxImage
-                    src="https://i.ibb.co/4gT3LR9K/mountain-10.png"
+                    src="/assets/images/zhangjiakou/mountain-10.png"
                 />
             </ParallaxLayer>
 
@@ -117,7 +208,7 @@ export default function ZhangjiakouScene() {
                 zIndex={4}
             >
                 <ParallaxImage
-                    src="https://i.ibb.co/rW6cjXV/fog-6.png"
+                    src="/assets/images/zhangjiakou/fog-6.png"
                 />
             </ParallaxLayer>
 
@@ -142,7 +233,7 @@ export default function ZhangjiakouScene() {
                 zIndex={5}
             >
                 <ParallaxImage
-                    src="https://i.ibb.co/3y15rgKD/mountain-9.png"
+                    src="/assets/images/zhangjiakou/mountain-9.png"
                 />
             </ParallaxLayer>
 
@@ -167,7 +258,7 @@ export default function ZhangjiakouScene() {
                 zIndex={6}
             >
                 <ParallaxImage
-                    src="https://i.ibb.co/zHWDdxRR/mountain-8.png"
+                    src="/assets/images/zhangjiakou/mountain-8.png"
                 />
             </ParallaxLayer>
 
@@ -192,7 +283,7 @@ export default function ZhangjiakouScene() {
                 zIndex={7}
             >
                 <ParallaxImage
-                    src="https://i.ibb.co/jFSMJ2t/fog-5.png"
+                    src="/assets/images/zhangjiakou/fog-5.png"
                 />
             </ParallaxLayer>
 
@@ -217,7 +308,7 @@ export default function ZhangjiakouScene() {
                 zIndex={8}
             >
                 <ParallaxImage
-                    src="https://i.ibb.co/Fq5CHqZ6/mountain-7.png"
+                    src="/assets/images/zhangjiakou/mountain-7.png"
                 />
             </ParallaxLayer>
 
@@ -290,7 +381,7 @@ export default function ZhangjiakouScene() {
                 zIndex={10}
             >
                 <ParallaxImage
-                    src="https://i.ibb.co/N2TjCDLQ/mountain-6.png"
+                    src="/assets/images/zhangjiakou/mountain-6.png"
                 />
             </ParallaxLayer>
 
@@ -316,7 +407,7 @@ export default function ZhangjiakouScene() {
                 zIndex={11}
             >
                 <ParallaxImage
-                    src="https://i.ibb.co/23Xc3QwX/fog-4.png"
+                    src="/assets/images/zhangjiakou/fog-4.png"
                 />
             </ParallaxLayer>
 
@@ -341,7 +432,7 @@ export default function ZhangjiakouScene() {
                 zIndex={12}
             >
                 <ParallaxImage
-                    src="https://i.ibb.co/SSfDbsF/mountain-5.png"
+                    src="/assets/images/zhangjiakou/mountain-5.png"
                 />
             </ParallaxLayer>
 
@@ -366,7 +457,7 @@ export default function ZhangjiakouScene() {
                 zIndex={13}
             >
                 <ParallaxImage
-                    src="https://i.ibb.co/chZkMKzX/fog-3.png"
+                    src="/assets/images/zhangjiakou/fog-3.png"
                 />
             </ParallaxLayer>
 
@@ -391,7 +482,7 @@ export default function ZhangjiakouScene() {
                 zIndex={15}
             >
                 <ParallaxImage
-                    src="https://i.ibb.co/39PKgGNS/mountain-4.png"
+                    src="/assets/images/zhangjiakou/mountain-4.png"
                 />
             </ParallaxLayer>
 
@@ -416,7 +507,7 @@ export default function ZhangjiakouScene() {
                 zIndex={16}
             >
                 <ParallaxImage
-                    src="https://i.ibb.co/rKHGSD9S/mountain-3.png"
+                    src="/assets/images/zhangjiakou/mountain-3.png"
                 />
             </ParallaxLayer>
 
@@ -441,7 +532,7 @@ export default function ZhangjiakouScene() {
                 zIndex={16}
             >
                 <ParallaxImage
-                    src="https://i.ibb.co/bj0s7gRP/fog-2.png"
+                    src="/assets/images/zhangjiakou/fog-2.png"
                 />
             </ParallaxLayer>
 
@@ -466,7 +557,7 @@ export default function ZhangjiakouScene() {
                 zIndex={17}
             >
                 <ParallaxImage
-                    src="https://i.ibb.co/7tHMfwZH/mountain-2.png"
+                    src="/assets/images/zhangjiakou/mountain-2.png"
                 />
             </ParallaxLayer>
 
@@ -491,7 +582,7 @@ export default function ZhangjiakouScene() {
                 zIndex={18}
             >
                 <ParallaxImage
-                    src="https://i.ibb.co/Knh5tBS/mountain-1.png"
+                    src="/assets/images/zhangjiakou/mountain-1.png"
                 />
             </ParallaxLayer>
 
@@ -511,7 +602,7 @@ export default function ZhangjiakouScene() {
                 "
             >
                 <ParallaxImage
-                    src="https://i.ibb.co/MDt2jKzR/sun-rays.png"
+                    src="/assets/images/zhangjiakou/sun-rays.png"
                 />
             </div>
 
@@ -531,7 +622,7 @@ export default function ZhangjiakouScene() {
                 "
             >
                 <ParallaxImage
-                    src="https://i.ibb.co/GfrKQFPh/black-shadow.png"
+                    src="/assets/images/zhangjiakou/black-shadow.png"
                 />
             </div>
 
@@ -557,7 +648,7 @@ export default function ZhangjiakouScene() {
                 zIndex={21}
             >
                 <ParallaxImage
-                    src="https://i.ibb.co/Y41vTxSN/fog-1.png"
+                    src="/assets/images/zhangjiakou/fog-1.png"
                 />
             </ParallaxLayer>
 
@@ -577,6 +668,86 @@ export default function ZhangjiakouScene() {
                         "radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 65%, rgba(0, 0, 0, 0.7))",
                 }}
             />
-        </ParallaxSection>
+                </ParallaxSection>
+            </div>
+
+            {/* ── Atmospheric Preloader Scene ── */}
+            {showLoader && (
+                <div
+                    aria-live="polite"
+                    aria-label="Loading Zhangjiakou Parallax Scene"
+                    className={`
+                        absolute inset-0 z-[200] flex flex-col items-center justify-center
+                        bg-[#070b12] text-white px-6 select-none
+                        transition-all duration-700 ease-out
+                        ${isReady ? "opacity-0 pointer-events-none scale-[1.02]" : "opacity-100 scale-100"}
+                    `}
+                    style={{
+                        background:
+                            "radial-gradient(ellipse at center, #0f1c2e 0%, #070b12 75%)",
+                    }}
+                >
+                    {/* Atmospheric pulsing aura */}
+                    <div className="absolute w-80 h-80 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none animate-pulse" />
+
+                    <div className="relative z-10 flex flex-col items-center max-w-sm text-center">
+                        {/* 3D Depth Isometric Stack Icon */}
+                        <div className="relative mb-5 flex items-center justify-center">
+                            <div className="relative w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center shadow-2xl backdrop-blur-md">
+                                <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+                                </span>
+                                <svg
+                                    className="w-7 h-7 text-emerald-400/90"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="1.5"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                >
+                                    <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                                    <polyline points="2 17 12 22 22 17" />
+                                    <polyline points="2 12 12 17 22 12" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        {/* Title & Subtitle */}
+                        <p className="text-[10px] font-mono tracking-[0.28em] uppercase text-emerald-400 font-semibold mb-1">
+                            Zhangjiakou 2.5D Parallax
+                        </p>
+                        <h3 className="text-lg sm:text-xl font-bold tracking-tight text-white mb-1.5">
+                            {isReady ? "Scene Ready" : "Composing Atmosphere"}
+                        </h3>
+                        <p className="text-xs text-white/50 font-mono mb-6">
+                            {isReady
+                                ? "Synchronizing 20 depth planes..."
+                                : `Rendering depth plane ${loadedCount} of ${ZHANGJIAKOU_IMAGES.length}...`}
+                        </p>
+
+                        {/* Progress Bar Container */}
+                        <div className="w-64 sm:w-72">
+                            <div className="h-1.5 w-full rounded-full bg-white/10 overflow-hidden border border-white/5 relative">
+                                <div
+                                    className="h-full rounded-full bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 transition-all duration-300 ease-out shadow-[0_0_14px_rgba(52,211,153,0.7)]"
+                                    style={{ width: `${progress}%` }}
+                                />
+                            </div>
+
+                            <div className="flex items-center justify-between mt-2.5 text-[11px] font-mono">
+                                <span className="text-white/40">
+                                    {loadedCount}/{ZHANGJIAKOU_IMAGES.length} layers
+                                </span>
+                                <span className="text-emerald-400 font-semibold">
+                                    {progress}%
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
     );
 }

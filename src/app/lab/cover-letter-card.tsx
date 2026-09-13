@@ -1,4 +1,4 @@
-import Link from "next/link";
+
 import { ArrowUpRight, Sparkles, FileText, Download } from "lucide-react";
 
 export function CoverLetterCard() {
@@ -40,13 +40,13 @@ export function CoverLetterCard() {
 
           {/* Action buttons */}
           <div className="flex flex-wrap items-center gap-3">
-            <Link
+            <a
               href="/lab/cover-letter"
               className="inline-flex items-center gap-2 rounded-xl bg-[#1F2937] px-4 py-2.5 text-xs font-semibold text-white shadow-xs transition-all hover:bg-black hover:shadow-md group"
             >
               <span>Launch Studio</span>
               <ArrowUpRight size={14} className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </Link>
+            </a>
           </div>
         </div>
       </div>

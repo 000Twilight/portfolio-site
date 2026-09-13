@@ -3,7 +3,7 @@ import "./globals.css";
 import { Nav } from "@/components/layout/nav";
 import SmoothScrolling from "@/components/layout/smooth-scrolling";
 import Footer from "@/components/layout/footer";
-// import LoadingScreen from "@/components/layout/loading-screen"; // disabled — SplitRevealHero is now the opening sequence
+// import LoadingScreen from "@/components/layout/loading-screen";
 import CursorGlow from "@/components/layout/cursor-glow";
 import NoiseOverlay from "@/components/layout/noise-overlay";
 import { Bricolage_Grotesque, DM_Sans, Dancing_Script } from "next/font/google";
@@ -55,7 +55,7 @@ export default function RootLayout({
       </head>
       <body className={`${bricolage.variable} ${dmSans.variable} ${fancyFont.variable} overflow-x-hidden bg-[#F9FAFB]`}>
         {/* ── Global overlay stack (highest z-index first) ── */}
-        {/* <LoadingScreen /> */}  {/* z-9999 — disabled: SplitRevealHero is now the opening sequence */}
+        {/* <LoadingScreen />  */}
         <CursorGlow />     {/* z-9998 — follows mouse */}
         <NoiseOverlay />   {/* z-9997 — film grain texture */}
 

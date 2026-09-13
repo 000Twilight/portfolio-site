@@ -1,5 +1,5 @@
 "use client";
-
+import { ImageWithSkeleton } from "@/components/ui/image-with-skeleton";
 interface ParallaxImageProps {
     src: string;
 
@@ -14,18 +14,20 @@ export default function ParallaxImage({
     src,
     alt = "",
     className = "",
-    loading = "lazy",
+    loading = "eager",
 }: ParallaxImageProps) {
     return (
-        <img
+        <ImageWithSkeleton
             src={src}
             alt={alt}
-            loading={loading}
-            decoding="async"
-            draggable={false}
+            width={1000}
+            height={1000}
+            sizes="100vw"
+            priority={loading === "eager"}
             className={`
                 block
                 w-full
+                h-auto
                 select-none
                 ${className}
             `}

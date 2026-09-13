@@ -7,6 +7,7 @@ import { ArrowUpRight, FileText } from "lucide-react";
 import { GooeyTextReveal } from "@/components/ui/gooey-text-reveal";
 import SlideTextButton from "@/components/ui/slide-text-button";
 import { isInitialLoad } from "@/lib/store/intro-store";
+import { ImageWithSkeleton } from "@/components/ui/image-with-skeleton";
 
 interface HeroProps {
   delay?: number;
@@ -107,14 +108,13 @@ export function Hero({ delay = 0 }: HeroProps) {
       {/* ── Right Spotlight Card ─────────────────────────────────────────── */}
       <div data-hero-panel className="relative flex flex-col justify-between rounded-3xl bg-white border border-[#E5E7EB] p-4 shadow-[0_1px_3px_0_rgba(0,0,0,0.02)] overflow-hidden">
         <div data-hero-float className="relative h-full w-full min-h-[380px] rounded-2xl overflow-hidden bg-[#F3F4F6] border border-[#E5E7EB]">
-          <img
+          <ImageWithSkeleton
             src={hero.portrait as string}
             alt={hero.portraitAlt}
-            width={1024}
-            height={1280}
-            className="h-full w-full object-cover [object-position:center_20%] grayscale opacity-90 transition-all duration-700 hover:grayscale-0"
-            // Eager load since this is in the initial viewport once the intro finishes
-            fetchPriority="high"
+            fill
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            className="object-cover [object-position:center_20%] grayscale opacity-90 transition-all duration-700 hover:grayscale-0"
+            priority
           />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#FFFFFF] via-[#FFFFFF]/85 to-transparent px-6 pt-24 pb-6 sm:px-8 sm:pb-8">
             <GooeyTextReveal mode="immediate" delay={actualDelay + 1.8} className="display text-[clamp(1.4rem,2.8vw,2.2rem)] text-[#1F2937] leading-tight whitespace-pre-line">

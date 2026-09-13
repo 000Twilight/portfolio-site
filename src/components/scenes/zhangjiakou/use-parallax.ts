@@ -55,10 +55,11 @@ export function useParallax({
         const setSmoothY = gsap.quickTo(mouse, "y", { duration: smoothing, ease: "power3.out", onUpdate: updateLayers });
 
         const handlePointerMove = (e: PointerEvent) => {
-            const normalizedX = (e.clientX / window.innerWidth) * 2 - 1;
-            const normalizedY = (e.clientY / window.innerHeight) * 2 - 1;
-            setSmoothX(normalizedX);
-            setSmoothY(normalizedY);
+            const rect = section.getBoundingClientRect();
+            const normalizedX = rect.width > 0 ? ((e.clientX - rect.left) / rect.width) * 2 - 1 : 0;
+            const normalizedY = rect.height > 0 ? ((e.clientY - rect.top) / rect.height) * 2 - 1 : 0;
+            setSmoothX(Math.max(-1, Math.min(1, normalizedX)));
+            setSmoothY(Math.max(-1, Math.min(1, normalizedY)));
         };
 
         const handlePointerLeave = () => {

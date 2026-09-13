@@ -192,23 +192,23 @@ export default function CoverLetterStudioPage() {
       {/* ── Print Stylesheet for clean native A4 PDF generation ── */}
       <style>{`
         @media print {
-          body {
+          body, main, section, .grid {
             background: white !important;
             margin: 0 !important;
             padding: 0 !important;
+            display: block !important;
+            height: auto !important;
+            min-height: auto !important;
           }
           /* Hide all application elements */
-          nav, aside, header, footer, [data-studio-controls], [data-no-print] {
+          nav, aside, header, footer, [data-no-print] {
             display: none !important;
           }
           /* Show ONLY the printable document sheet */
           #printable-sheet {
             display: block !important;
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
+            position: relative !important;
             width: 100% !important;
-            min-height: 100vh !important;
             margin: 0 !important;
             padding: 24mm 20mm !important;
             box-shadow: none !important;
@@ -219,9 +219,20 @@ export default function CoverLetterStudioPage() {
           #printable-sheet * {
             color: inherit !important;
           }
+          .print-hidden {
+            display: none !important;
+          }
+          .print-only {
+            display: block !important;
+          }
           @page {
             size: A4;
             margin: 0;
+          }
+        }
+        @media screen {
+          .print-only {
+            display: none !important;
           }
         }
       `}</style>
@@ -288,7 +299,33 @@ export default function CoverLetterStudioPage() {
           {/* ═════════════════════════════════════════════════════════════════════
               LEFT PANE: CONTROLS & INPUTS (lg:col-span-5)
           ══════════════════════════════════════════════════════════════════════ */}
-          <section data-studio-controls className="lg:col-span-5 flex flex-col gap-5">
+          <section data-studio-controls data-no-print className="lg:col-span-5 flex flex-col gap-5 relative">
+            {/* Generated Overlay */}
+            {coverLetter && (
+              <div className="absolute -inset-4 z-10 bg-white/60 backdrop-blur-sm rounded-3xl border border-white/50 flex flex-col items-center justify-center p-6 text-center">
+                <div className="bg-white p-8 rounded-3xl shadow-xl border border-[#E5E7EB] max-w-sm w-full animate-in zoom-in-95 duration-300">
+                  <div className="h-14 w-14 bg-emerald-50 text-emerald-600 rounded-2xl border border-emerald-100 flex items-center justify-center mx-auto mb-5 shadow-xs">
+                    <Check size={28} />
+                  </div>
+                  <h3 className="text-lg font-bold text-[#1F2937] mb-2">Cover Letter Ready</h3>
+                  <p className="text-sm text-[#6B7280] mb-8 leading-relaxed">
+                    Your bespoke cover letter has been synthesized. You can refine it in the live preview or export it to PDF.
+                  </p>
+                  <button 
+                    onClick={() => {
+                      if (confirm("Are you sure you want to create a new cover letter? This will discard the current one.")) {
+                        setCoverLetter("");
+                      }
+                    }}
+                    className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-[#1F2937] px-4 py-3 text-sm font-semibold text-white shadow-xs transition-all hover:bg-black hover:shadow-md"
+                  >
+                    <RotateCcw size={16} />
+                    <span>Create New Letter</span>
+                  </button>
+                </div>
+              </div>
+            )}
+            
             {/* Template Archetype Selector */}
             <div className="rounded-2xl border border-[#E5E7EB] bg-white p-5 shadow-xs">
               <label className="text-xs font-bold uppercase tracking-wider text-[#4B5563] block mb-3">
@@ -603,9 +640,13 @@ export default function CoverLetterStudioPage() {
                       <textarea
                         value={coverLetter}
                         onChange={(e) => setCoverLetter(e.target.value)}
-                        className="w-full flex-1 text-sm text-[#1F2937] leading-relaxed resize-none focus:outline-hidden bg-transparent font-sans"
+                        className="w-full flex-1 text-sm text-[#1F2937] leading-relaxed resize-none focus:outline-hidden bg-transparent font-sans print-hidden"
                         style={{ minHeight: "700px" }}
                       />
+                      {/* Print-only content area to allow natural text flow across pages */}
+                      <div className="print-only text-sm text-[#1F2937] leading-relaxed font-sans whitespace-pre-wrap flex-1">
+                        {coverLetter}
+                      </div>
 
                       {/* Bottom Footer watermark */}
                       <div className="pt-8 border-t border-[#F3F4F6] text-[10px] text-[#9CA3AF] flex justify-between">

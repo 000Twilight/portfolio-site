@@ -61,13 +61,26 @@ export default function ParallaxSection({
             return;
         }
         const updateScale = () => {
-            const widthScale = window.innerWidth / designWidth;
-            const heightScale = window.innerHeight / designHeight;
+            const el = sectionRef.current;
+            const width = el && el.clientWidth > 0 ? el.clientWidth : window.innerWidth;
+            const height = el && el.clientHeight > 0 ? el.clientHeight : window.innerHeight;
+            const widthScale = width / designWidth;
+            const heightScale = height / designHeight;
             setSceneScale(fitMode === "cover" ? Math.max(widthScale, heightScale) : Math.min(widthScale, heightScale));
         };
         updateScale();
         window.addEventListener("resize", updateScale);
-        return () => window.removeEventListener("resize", updateScale);
+
+        let ro: ResizeObserver | null = null;
+        if (typeof ResizeObserver !== "undefined" && sectionRef.current) {
+            ro = new ResizeObserver(() => updateScale());
+            ro.observe(sectionRef.current);
+        }
+
+        return () => {
+            window.removeEventListener("resize", updateScale);
+            ro?.disconnect();
+        };
     }, [responsive, designWidth, designHeight, fitMode]);
 
     const animationEnabled = enabled && !prefersReducedMotion;
@@ -86,7 +99,7 @@ export default function ParallaxSection({
         <ParallaxContext value={contextValue}>
             <section
                 ref={sectionRef}
-                className={`relative h-screen w-full overflow-hidden ${className}`}
+                className={`relative h-full w-full overflow-hidden ${className}`}
             >
                 <div
                     className="absolute left-1/2 top-1/2"

@@ -1,258 +1,168 @@
 "use client";
 
-/**
- * LoadingScreen
- *
- * A cinematic curtain-split loading screen that blocks the site on first paint,
- * counts to 100 %, then splits vertically to reveal the page below.
- *
- * Architecture
- * ─────────────────────────────────────────────────────────────────────────────
- * - Two absolutely-positioned panels (top / bottom) each fill half the viewport.
- *   The central content lives in the top panel so it stays centred during split.
- * - A single GSAP timeline: name fade-in → line expansion / counter count-up
- *   (in parallel) → curtain split → DOM removal.
- * - prefers-reduced-motion: skips straight to removal, no animation.
- * - Body scroll is locked for the duration and restored on cleanup / completion.
- *
- * Usage — add to src/app/layout.tsx inside the body element:
- *   import LoadingScreen from "@/components/layout/loading-screen";
- *   <body>
- *     <LoadingScreen />
- *     <SmoothScrolling>...</SmoothScrolling>
- *   </body>
- *
- * Palette (cinematic dark, independent of the site CSS variables)
- * ─────────────────────────────────────────────────────────────────────────────
- * Background : #030610  (deep navy)
- * Cyan accent: #38bdf8
- * Amber accent: #fbbf24
- */
-
 import { useEffect, useRef, useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 import gsap from "gsap";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
-// ─── timing constants (seconds) ────────────────────────────────────────────
-const ENTER_DELAY   = 0.05;
-const NAME_DURATION = 0.75;
-const LINE_DURATION = 1.55;
-const COUNTER_DELAY = 0.05;
-const EXIT_START    = 2.15;
-const EXIT_DURATION = 0.85;
-
 export default function LoadingScreen() {
-  const [alive, setAlive] = useState(true);
-
-  const topCurtainRef = useRef<HTMLDivElement>(null);
-  const botCurtainRef = useRef<HTMLDivElement>(null);
-  const nameRef       = useRef<HTMLDivElement>(null);
-  const subtitleRef   = useRef<HTMLParagraphElement>(null);
-  const lineRef       = useRef<HTMLDivElement>(null);
-  const counterRef    = useRef<HTMLSpanElement>(null);
-
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const prefersReducedMotion = useReducedMotion();
+
+  const [isActive, setIsActive] = useState(true);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const slicesRef = useRef<(HTMLDivElement | null)[]>([]);
+  const counterRef = useRef<HTMLDivElement>(null);
+  
+  // To avoid running the loader infinitely or flashing on instantaneous mounts
+  const isFirstMount = useRef(true);
 
   useEffect(() => {
     if (prefersReducedMotion) {
-      setAlive(false);
+      setIsActive(false);
       return;
     }
 
-    const top     = topCurtainRef.current;
-    const bot     = botCurtainRef.current;
-    const name    = nameRef.current;
-    const sub     = subtitleRef.current;
-    const line    = lineRef.current;
-    const counter = counterRef.current;
+    // Reactivate for the new route
+    setIsActive(true);
 
-    if (!top || !bot || !name || !sub || !line || !counter) return;
+    const tl = gsap.timeline();
+    // Snap everything into blocking position instantly
+    gsap.set(containerRef.current, { autoAlpha: 1 });
+    gsap.set(slicesRef.current, { yPercent: 0 });
+    gsap.set(counterRef.current, { opacity: 1, y: 0, scale: 1 });
+    if (counterRef.current) counterRef.current.innerText = "0%";
 
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    let cancelled = false;
+    let loadedCount = 0;
 
-    // ── initial GSAP states ───────────────────────────────────────────────
-    gsap.set([top, bot], { yPercent: 0 });
-    gsap.set([name, sub], { opacity: 0, y: 28, force3D: true });
-    gsap.set(line, { scaleX: 0, transformOrigin: "left center", force3D: true });
-    gsap.set(counter, { opacity: 0 });
+    // Small delay to allow Next.js to inject new route's DOM
+    const timer = setTimeout(() => {
+      if (cancelled) return;
 
-    const obj = { val: 0 };
+      const imgs = Array.from(document.querySelectorAll("img"));
+      // We only track images that are eager or currently rendering without lazy
+      const pendingImgs = imgs.filter((img) => !img.complete);
 
-    const tl = gsap.timeline({
-      onComplete() {
-        document.body.style.overflow = prevOverflow;
-        setAlive(false);
-      },
-    });
+      const triggerOutro = () => {
+        if (cancelled) return;
+        
+        // Prevent body scroll during animation
+        const prevOverflow = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
 
-    tl
-      // 1. Name slides up + fades in
-      .to(name, {
-        opacity: 1, y: 0,
-        duration: NAME_DURATION,
-        ease: "power3.out",
-        force3D: true,
-      }, ENTER_DELAY)
+        const outroTl = gsap.timeline({
+          onComplete: () => {
+            setIsActive(false);
+            document.body.style.overflow = prevOverflow;
+          },
+        });
 
-      // 2. Subtitle follows slightly behind
-      .to(sub, {
-        opacity: 1, y: 0,
-        duration: NAME_DURATION * 0.8,
-        ease: "power3.out",
-        force3D: true,
-      }, ENTER_DELAY + 0.1)
+        // 1. Counter glitches/scales out
+        outroTl.to(counterRef.current, {
+          opacity: 0,
+          scale: 0.8,
+          duration: 0.4,
+          ease: "power3.in",
+        });
 
-      // 3. Counter number becomes visible
-      .to(counter, { opacity: 1, duration: 0.25 }, ENTER_DELAY + 0.2)
+        // 2. Slices slide out in staggered alternating directions
+        outroTl.to(
+          slicesRef.current,
+          {
+            yPercent: (i) => (i % 2 === 0 ? -100 : 100),
+            duration: 0.9,
+            ease: "power4.inOut",
+            stagger: 0.05,
+          },
+          "-=0.2"
+        );
+      };
 
-      // 4. Progress line expands left → right
-      .to(line, {
-        scaleX: 1,
-        duration: LINE_DURATION,
-        ease: "power2.inOut",
-        force3D: true,
-      }, ENTER_DELAY + COUNTER_DELAY)
+      if (pendingImgs.length === 0) {
+        // If no images need loading, quickly animate out
+        if (counterRef.current) counterRef.current.innerText = "100%";
+        // Give a slight visual pause so the user registers the transition, 
+        // unless they want it completely invisible. The prompt requested:
+        // "if theres no image... then dont make it load always, make it go through"
+        // So we transition immediately.
+        triggerOutro();
+        return;
+      }
 
-      // 5. Counter ticks 0 → 100 in sync with the line
-      .to(obj, {
-        val: 100,
-        duration: LINE_DURATION,
-        ease: "power2.inOut",
-        onUpdate() {
-          if (counter) counter.textContent = String(Math.round(obj.val));
-        },
-      }, ENTER_DELAY + COUNTER_DELAY)
+      const updateProgress = () => {
+        loadedCount++;
+        const p = Math.round((loadedCount / pendingImgs.length) * 100);
+        
+        if (counterRef.current) {
+          counterRef.current.innerText = `${p}%`;
+        }
 
-      // 6. Top curtain sweeps up off-screen
-      .to(top, {
-        yPercent: -100,
-        duration: EXIT_DURATION,
-        ease: "power4.inOut",
-        force3D: true,
-      }, EXIT_START)
+        if (loadedCount >= pendingImgs.length) {
+          triggerOutro();
+        }
+      };
 
-      // 7. Bottom curtain sweeps down off-screen (simultaneous)
-      .to(bot, {
-        yPercent: 100,
-        duration: EXIT_DURATION,
-        ease: "power4.inOut",
-        force3D: true,
-      }, EXIT_START);
+      pendingImgs.forEach((img) => {
+        img.addEventListener("load", updateProgress);
+        img.addEventListener("error", updateProgress); // treat errors as loaded
+      });
+
+      // Fallback timeout to ensure we never hang the app if an image fails silently
+      const fallback = setTimeout(() => {
+        if (!cancelled && isActive) {
+          if (counterRef.current) counterRef.current.innerText = "100%";
+          triggerOutro();
+        }
+      }, 3500);
+
+      return () => {
+        clearTimeout(fallback);
+        pendingImgs.forEach((img) => {
+          img.removeEventListener("load", updateProgress);
+          img.removeEventListener("error", updateProgress);
+        });
+      };
+    }, 100); // 100ms allows DOM update
+
+    isFirstMount.current = false;
 
     return () => {
-      tl.kill();
-      document.body.style.overflow = prevOverflow;
+      cancelled = true;
+      clearTimeout(timer);
     };
-  }, [prefersReducedMotion]);
+  }, [pathname, searchParams, prefersReducedMotion]);
 
-  if (!alive) return null;
+  if (!isActive) return null;
 
   return (
     <div
-      aria-hidden="true"
-      className="fixed inset-0 z-[9999] pointer-events-none select-none overflow-hidden"
+      ref={containerRef}
+      className="fixed inset-0 z-[9999] pointer-events-none flex flex-row overflow-hidden"
     >
-      {/* ── Top curtain — holds the intro content ────────────────────────── */}
-      <div
-        ref={topCurtainRef}
-        className="absolute inset-x-0 top-0 h-1/2 flex flex-col items-center justify-end"
-        style={{
-          background: "#F9FAFB",
-          willChange: "transform",
-          paddingBottom: "clamp(2rem, 5vw, 4rem)",
-        }}
-      >
-        <div className="flex flex-col items-center gap-5">
+      {/* 5 Vertical Slices */}
+      {[0, 1, 2, 3, 4].map((i) => (
+        <div
+          key={i}
+          ref={(el) => {
+            slicesRef.current[i] = el;
+          }}
+          className="h-full flex-1 bg-[#111827]" // Dark slate color for premium feel
+          style={{ willChange: "transform" }}
+        />
+      ))}
 
-          {/* Name */}
-          <div ref={nameRef}>
-            <h1
-              style={{
-                fontFamily: "'Bricolage Grotesque', system-ui, sans-serif",
-                fontSize: "clamp(2.75rem, 8vw, 5.5rem)",
-                fontWeight: 700,
-                letterSpacing: "-0.04em",
-                lineHeight: 0.95,
-                color: "#1F2937",
-                margin: 0,
-              }}
-            >
-              Mario<span style={{ color: "#6B7280" }}>.</span>
-            </h1>
-          </div>
-
-          {/* Subtitle */}
-          <p
-            ref={subtitleRef}
-            style={{
-              fontFamily: "'DM Sans', system-ui, sans-serif",
-              fontSize: "0.65rem",
-              letterSpacing: "0.35em",
-              textTransform: "uppercase",
-              color: "#6B7280",
-              margin: 0,
-              fontWeight: 300,
-            }}
-          >
-            Portfolio &middot; 2025
-          </p>
-
-          {/* Progress bar + counter */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.75rem",
-              width: "clamp(14rem, 30vw, 22rem)",
-            }}
-          >
-            {/* Track — clips the gradient so it does not bleed outside */}
-            <div
-              style={{
-                flex: 1,
-                height: "1px",
-                overflow: "hidden",
-                background: "rgba(31, 41, 55, 0.08)",
-                position: "relative",
-              }}
-            >
-              <div
-                ref={lineRef}
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  background:
-                    "linear-gradient(90deg, #1F2937 0%, #6B7280 50%, #E5E7EB 100%)",
-                  willChange: "transform",
-                }}
-              />
-            </div>
-
-            {/* Monospaced percentage counter */}
-            <span
-              ref={counterRef}
-              style={{
-                fontFamily: "ui-monospace, monospace",
-                fontSize: "0.7rem",
-                color: "#6B7280",
-                width: "2.25rem",
-                textAlign: "right",
-                fontVariantNumeric: "tabular-nums",
-              }}
-            >
-              0
-            </span>
-          </div>
+      {/* Center Counter */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div
+          ref={counterRef}
+          className="text-[#F9FAFB] text-6xl md:text-8xl font-bold tracking-tighter mix-blend-difference"
+          style={{ fontFamily: "var(--font-bricolage)" }}
+        >
+          0%
         </div>
       </div>
-
-      {/* ── Bottom curtain ───────────────────────────────────────────────── */}
-      <div
-        ref={botCurtainRef}
-        className="absolute inset-x-0 bottom-0 h-1/2"
-        style={{ background: "#F9FAFB", willChange: "transform" }}
-      />
     </div>
   );
 }

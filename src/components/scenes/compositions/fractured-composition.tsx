@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useCallback } from "react";
 import { RealityCompositionProps } from "./types";
+import { ImageWithSkeleton } from "@/components/ui/image-with-skeleton";
 
 export type RealityType = "orig" | "tech" | "mc";
 
@@ -205,12 +206,14 @@ export default function FracturedComposition({
     >
       {/* Soft base fill -- masks sub-pixel rendering gaps between shards */}
       <div className="sf-frac-base">
-        <img
+        <ImageWithSkeleton
           src={heroImage}
           alt=""
-          className="sf-frac-img sf-depth-orig"
-          draggable={false}
-          loading="lazy"
+          containerClassName="sf-frac-img sf-depth-orig"
+          className="object-cover object-top"
+          fill
+          sizes="100vw"
+          priority
         />
       </div>
 
@@ -221,12 +224,14 @@ export default function FracturedComposition({
           className="sf-frac-zone"
           style={{ clipPath: `polygon(${shard.cssPoints})` }}
         >
-          <img
+          <ImageWithSkeleton
             src={imgSrc(pieceRealities[i])}
             alt=""
-            className={`sf-frac-img sf-depth-${pieceRealities[i]}`}
-            draggable={false}
-            loading="lazy"
+            containerClassName={`sf-frac-img sf-depth-${pieceRealities[i]}`}
+            className="object-cover object-top"
+            fill
+            sizes="100vw"
+            priority
           />
         </div>
       ))}

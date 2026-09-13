@@ -8,6 +8,12 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@google/genai",
+      "protobufjs"
+    ]
+  },
   "dependencies": {
     "@google/genai": "^2.21.0",
     "@gsap/react": "^2.1.2",
