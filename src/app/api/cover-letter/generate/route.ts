@@ -1,8 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
+import fs from "fs";
+import path from "path";
 import { COVER_LETTER_TEMPLATES } from "@/lib/data/cover-letter-templates";
 import { DEFAULT_CV_MARKDOWN } from "@/lib/data/default-cv";
 
+// GET endpoint: returns the exact markdown instructions file
+export async function GET() {
+  try {
+    const instructionsPath = path.join(process.cwd(), "src/lib/data/cover-letter-instructions.md");
+    const instructions = fs.readFileSync(instructionsPath, "utf-8");
+    return NextResponse.json({ instructions });
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: "Failed to read cover-letter-instructions.md" },
+      { status: 500 }
+    );
+  }
+}
+
+// POST endpoint: synthesizes the cover letter using Gemini Flash models
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -41,14 +58,32 @@ export async function POST(req: NextRequest) {
     const selectedTemplate =
       COVER_LETTER_TEMPLATES.find((t) => t.id === templateId) || COVER_LETTER_TEMPLATES[0];
 
-    // Supported models whitelist
-    const allowedModels = ["gemini-3.5-flash-lite", "gemini-2.5-flash", "gemini-3.7-flash", "gemini-2.5-pro"];
-    const targetModel = allowedModels.includes(model) ? model : "gemini-3.5-flash-lite";
+    // Supported models whitelist: strictly 3.6, 3.7, and 3.8 Flash
+    const allowedModels = ["gemini-3.6-flash", "gemini-3.7-flash", "gemini-3.8-flash"];
+    const targetModel = allowedModels.includes(model) ? model : "gemini-3.7-flash";
 
     const ai = new GoogleGenAI({ apiKey: activeApiKey });
 
+    // Format today's date dynamically (e.g. "September 15, 2026")
+    const todayDate = new Intl.DateTimeFormat("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+      timeZone: "Asia/Jakarta",
+    }).format(new Date());
+
+    // Read instructions and humanization directives directly from the single source of truth: cover-letter-instructions.md
+    const instructionsPath = path.join(process.cwd(), "src/lib/data/cover-letter-instructions.md");
+    let instructionsMarkdown = fs.readFileSync(instructionsPath, "utf-8");
+    instructionsMarkdown = instructionsMarkdown.replace(/\{\{TODAYS_DATE\}\}/g, todayDate);
+
     const prompt = `
-You are an expert executive recruiter and elite career strategist crafting a bespoke, persuasive, high-conversion cover letter.
+You are an expert career strategist and technical writing partner crafting a bespoke, human-sounding cover letter for Mario Richie Lim.
+
+Today's Date: ${todayDate}
+
+=== DEDICATED INSTRUCTIONS & ANTI-AI DIRECTIVES (FROM cover-letter-instructions.md) ===
+${instructionsMarkdown}
 
 === CANDIDATE CV DATA ===
 ${cvData}
@@ -58,30 +93,29 @@ ${jobDescription}
 
 ${companyProfile ? `=== TARGET COMPANY PROFILE & CONTEXT ===\n${companyProfile}\n` : ""}
 
-=== ARCHETYPE DIRECTIVES (${selectedTemplate.name}) ===
+=== SELECTED ARCHETYPE: ${selectedTemplate.name} ===
 ${selectedTemplate.systemDirective}
 
 ${customInstructions ? `=== CANDIDATE'S CUSTOM INSTRUCTIONS ===\n${customInstructions}\n` : ""}
 
-=== INSTRUCTIONS & FORMATTING RULES ===
-1. Craft a complete, authentic, highly tailored cover letter based directly on the candidate's verified achievements, metrics, and technology stack.
-2. DO NOT invent fake companies or experiences not present in the CV data. Anchor every claim in their actual background (e.g. Supabase, PostgreSQL, React, Laravel, Gemini API automation, ML research).
-3. Connect specific technical accomplishments directly to the responsibilities and requirements listed in the Job Description.
-4. Output cleanly structured Markdown format with standard formal letter components:
-   - Date
-   - Recipient / Hiring Team & Company Name (extract from JD/Company profile if available, or "Hiring Team")
-   - Subject Line (e.g., Application for [Role Title] - [Candidate Name])
-   - Formal Greeting
-   - Letter Body (3-4 focused, impactful paragraphs)
-   - Professional Sign-off and Candidate Name
-5. Do NOT include meta-commentary like "Here is your cover letter:". Start directly with the letter.
+=== STRICT OUTPUT INSTRUCTIONS ===
+1. The output MUST start directly with the candidate contact header and today's date (${todayDate}), followed by the recipient block, salutation, and body:
+Mario Richie Lim
+Jakarta, Indonesia | +62 878-0929-0500 | mario.richie.lim@gmail.com | linkedin.com/in/mario-richie-lim/ | github.com/000Twilight | mario-richie-lim.vercel.app
+
+${todayDate}
+
+2. NO DECORATIVE LINES: Do not output any "---", "===", line dividers, or horizontal rules.
+3. NO MARKDOWN HEADINGS: Do not use "#", "##", or bold formatting asterisks inside the letter. Produce clean, typed text with natural paragraph breaks.
+4. ZERO AI CLICHÉS: Follow all anti-AI humanization directives from the instructions file above (no "I am writing to express my strong interest", no "Furthermore/Moreover", vary rhythm and length, sound real and grounded).
+5. Output ONLY the cover letter text. No preamble, no meta-commentary.
 `;
 
     const response = await ai.models.generateContent({
       model: targetModel,
       contents: prompt,
       config: {
-        temperature: 0.7,
+        temperature: 0.85,
       },
     });
 
@@ -104,7 +138,6 @@ ${customInstructions ? `=== CANDIDATE'S CUSTOM INSTRUCTIONS ===\n${customInstruc
     console.error("Cover Letter Generation Error:", err);
     const errorMessage = err?.message || "Failed to generate cover letter.";
 
-    // Handle common Gemini API errors gracefully
     if (errorMessage.includes("API_KEY_INVALID") || errorMessage.includes("API key not valid")) {
       return NextResponse.json(
         { error: "Invalid Gemini API key. Please check your key in the settings and try again.", code: "INVALID_KEY" },

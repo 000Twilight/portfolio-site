@@ -13,11 +13,11 @@ export const COVER_LETTER_TEMPLATES: CoverLetterTemplate[] = [
     badge: "Recommended",
     description: "Punchy, metrics-driven, and impact-focused. Ideal for modern startups and tech teams.",
     systemDirective: `
-Please use the following EXACT template structure. Do not change the headings, words, or layout of the template. Only replace the bracketed placeholders (like [Date], [Hiring Manager], etc.) with the appropriate information synthesized from the Job Description, Company Profile, and CV data.
+Please use the following template structure. Do not include markdown headers, decorative lines, or dividers. Start directly with the plain text contact info and date. Replace bracketed placeholders with synthesized details from the Job Description and CV.
 
 === TEMPLATE START ===
-[Your Full Name]
-[Your Phone Number] | [Your Email] | [Your LinkedIn/Portfolio URL]
+Mario Richie Lim
+Jakarta, Indonesia | +62 878-0929-0500 | mario.richie.lim@gmail.com | linkedin.com/in/mario-richie-lim/ | github.com/000Twilight | mario-richie-lim.vercel.app
 
 [Date]
 
@@ -27,17 +27,17 @@ Please use the following EXACT template structure. Do not change the headings, w
 
 Dear [Hiring Manager Name or "Hiring Team"],
 
-I am writing to express my strong interest in the [Job Title] position at [Company Name]. [Insert a strong hook sentence about why their mission or product excites you based on the company profile/JD].
+[Open directly with a sharp observation about the company's product or mission, connecting it to why this engineering challenge fits your background].
 
-In my recent experience as a [Your Recent Role] at [Your Recent Company/Project], I successfully [Insert 1-2 major achievements directly relevant to the JD, using metrics where possible]. I am particularly drawn to your team's work in [Mention a specific tech stack or goal from the JD], and I am confident that my background in [Mention 1-2 of your core skills like React, Node.js, AI APIs] will allow me to make an immediate impact.
+In my recent experience as a [Your Recent Role] at [Your Recent Company/Project], I [Insert 1-2 major technical achievements directly relevant to the JD, using metrics where possible]. What drew me to your team is [Mention a specific tech stack or engineering goal from the JD], where my experience in [Mention 1-2 core skills like React, TypeScript, Laravel, or Gemini API automation] will allow me to hit the ground running.
 
-[Insert a short paragraph connecting another relevant project/experience to a specific requirement in the Job Description. Highlight how you thrive in fast-paced environments or solve complex problems.]
+[Insert a short, focused paragraph connecting another relevant project or problem-solving accomplishment to a key requirement in the Job Description. Keep the tone grounded, confident, and direct.]
 
-I would welcome the opportunity to discuss how my technical skills and product mindset align with [Company Name]'s goals. Thank you for your time and consideration.
+I would love to talk through how my technical background and focus on product velocity can help [Company Name] execute on these goals. Thanks for your time and consideration.
 
 Sincerely,
 
-[Your Full Name]
+Mario Richie Lim
 === TEMPLATE END ===
 `,
   },
@@ -47,34 +47,31 @@ Sincerely,
     badge: "Structured",
     description: "Formal, thorough, and architectural. Emphasizes reliability and cross-team collaboration.",
     systemDirective: `
-Please use the following EXACT template structure. Do not change the headings, words, or layout of the template. Only replace the bracketed placeholders with the appropriate synthesized information.
+Please use the following template structure. Do not include markdown headers, decorative lines, or dividers. Start directly with the plain text contact info and date. Replace bracketed placeholders with synthesized details from the Job Description and CV.
 
 === TEMPLATE START ===
-[Your Full Name]
-[Your Address]
-[Your Phone Number] | [Your Email]
+Mario Richie Lim
+Jakarta, Indonesia | +62 878-0929-0500 | mario.richie.lim@gmail.com | linkedin.com/in/mario-richie-lim/ | github.com/000Twilight | mario-richie-lim.vercel.app
 
 [Date]
 
 [Hiring Manager Name or "Hiring Committee"]
 [Company Name]
-[Company Address]
-
-Subject: Application for [Job Title]
+[Company Address or "Remote"]
 
 Dear [Hiring Manager Name or "Hiring Committee"],
 
-Please accept this letter as a formal expression of my interest in the [Job Title] role at [Company Name]. With a proven track record in software engineering and a deep focus on building reliable, scalable systems, I am eager to contribute to your engineering department.
+I am reaching out regarding the [Job Title] role at [Company Name]. Having built robust full-stack applications and automated internal operational systems that improved business efficiency by up to 50%, I am eager to bring this architectural rigor to your team.
 
-Throughout my career, particularly during my time working on [Insert relevant Enterprise/Scalable Project], I have honed my expertise in [Insert 2-3 enterprise skills, e.g., relational databases, system architecture, backend optimization]. I note from your job description that [Company Name] is currently focusing on [Insert a core JD requirement], which aligns perfectly with my experience in [Insert matching experience/metric].
+During my work on [Insert relevant Enterprise/Scalable Project], I focused heavily on [Insert 2-3 enterprise skills, e.g., relational databases, system architecture, backend optimization]. From your description, [Company Name] is prioritizing [Insert a core JD requirement], which directly matches my background in [Insert matching experience/metric].
 
-I am highly collaborative and accustomed to working with cross-functional teams to deliver robust software solutions that meet stringent business requirements. I admire [Company Name]'s commitment to [Insert Company Value/Mission] and am highly motivated to bring my technical rigor to your organization.
+I place a premium on system stability, maintainable data models, and tight cross-functional execution. [Company Name]'s standard for [Insert Company Value/Mission] resonates with how I build software, and I am excited about the opportunity to contribute.
 
-I have attached my resume for your review. I look forward to the possibility of discussing this opportunity with you in greater detail.
+I look forward to the possibility of discussing how my technical background aligns with your engineering roadmap.
 
-Respectfully yours,
+Sincerely,
 
-[Your Full Name]
+Mario Richie Lim
 === TEMPLATE END ===
 `,
   },
@@ -84,30 +81,31 @@ Respectfully yours,
     badge: "Craft & UX",
     description: "Narrative and craftsmanship focused. Bridges high-fidelity UI/UX with AI workflows.",
     systemDirective: `
-Please use the following EXACT template structure. Do not change the headings, words, or layout of the template. Only replace the bracketed placeholders with the appropriate synthesized information.
+Please use the following template structure. Do not include markdown headers, decorative lines, or dividers. Start directly with the plain text contact info and date. Replace bracketed placeholders with synthesized details from the Job Description and CV.
 
 === TEMPLATE START ===
-[Your Full Name]
-[Your Email] | [Your Portfolio URL]
+Mario Richie Lim
+Jakarta, Indonesia | +62 878-0929-0500 | mario.richie.lim@gmail.com | linkedin.com/in/mario-richie-lim/ | github.com/000Twilight | mario-richie-lim.vercel.app
 
 [Date]
 
 [Hiring Manager Name or "Design & Engineering Team"]
 [Company Name]
+[Company Address or "Remote"]
 
-Hi [Hiring Manager Name or "Team"],
+Dear [Hiring Manager Name or "Team"],
 
-Great products happen at the intersection of beautiful design and flawless engineering. That is exactly why I am thrilled to apply for the [Job Title] position at [Company Name]. 
+Great products happen at the intersection of thoughtful design and solid engineering. That philosophy is what immediately caught my attention about the [Job Title] role at [Company Name].
 
-When I saw that you are building [Insert something cool they are building from JD/Company Profile], I knew I had to reach out. In my work on [Insert a visually/creatively impressive project from CV, e.g., LearnMuse or interactive portfolio], I bridged the gap between complex backend systems (like [Insert Tech]) and fluid, intuitive user interfaces (using [Insert Tech]). 
+Seeing that your team is building [Insert a specific initiative or feature from JD/Company Profile] felt like a natural fit. In my work on [Insert a project from CV, e.g., LearnMuse or interactive systems], I worked directly across the stack, connecting complex APIs and database pipelines with fluid, intuitive user interfaces.
 
-I love obsessing over the micro-interactions as much as I love architecting the database schema. [Insert a brief paragraph about how your specific technical and creative skills map to their current needs/JD].
+I care as much about clean database schemas and reliable endpoints as I do about responsive layouts and micro-interactions. [Insert a brief paragraph about how your technical range maps directly to their current product needs].
 
-I would love to show you some of my recent work and discuss how I can help [Company Name] continue to build delightful experiences.
+I would love to walk through some of my work and explore how I can help [Company Name] build exceptional products.
 
 Best regards,
 
-[Your Full Name]
+Mario Richie Lim
 === TEMPLATE END ===
 `,
   },
@@ -117,7 +115,7 @@ Best regards,
     badge: "Flexible",
     description: "Follows your exact custom instructions and guidance.",
     systemDirective: `
-Please generate a cover letter adhering strictly to the candidate's custom instructions provided in the prompt. If the user provides a literal template in the custom instructions, fill it out exactly. Otherwise, use a standard professional format.
+Please generate a cover letter adhering strictly to the candidate's custom instructions provided in the prompt. Always start with the candidate contact header and today's date in plain text with no decorative lines.
 `,
   },
 ];

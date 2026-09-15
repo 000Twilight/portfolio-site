@@ -22,13 +22,15 @@ import {
   RotateCcw,
   Sliders,
   Zap,
-  Scale,
   BrainCircuit,
+  FileCode,
+  X,
 } from "lucide-react";
-import { COVER_LETTER_TEMPLATES, type CoverLetterTemplate } from "@/lib/data/cover-letter-templates";
+import { COVER_LETTER_TEMPLATES } from "@/lib/data/cover-letter-templates";
 import { DEFAULT_CV_MARKDOWN } from "@/lib/data/default-cv";
 import { AnimatedDropdown, type DropdownAction } from "@/components/ui/animated-dropdown";
 
+// Strictly Gemini 3.6, 3.7, and 3.8 Flash models
 const MODEL_ACTIONS: DropdownAction[] = [
   { id: "gemini-3.6-flash", label: "Gemini 3.6 Flash", description: "Fastest • Smallest", icon: <Zap size={14} className="text-amber-500" /> },
   { id: "gemini-3.7-flash", label: "Gemini 3.7 Flash", description: "Flagship • Recommended", icon: <Sparkles size={14} className="text-indigo-500" /> },
@@ -63,7 +65,7 @@ export default function CoverLetterStudioPage() {
   const [cvData, setCvData] = useState(DEFAULT_CV_MARKDOWN);
   const [selectedTemplate, setSelectedTemplate] = useState<string>("modern-tech");
   const [customInstructions, setCustomInstructions] = useState("");
-  const [model, setModel] = useState<string>("gemini-3.5-flash-lite");
+  const [model, setModel] = useState<string>("gemini-3.7-flash");
 
   // Output & UI state
   const [coverLetter, setCoverLetter] = useState<string>("");
@@ -71,13 +73,43 @@ export default function CoverLetterStudioPage() {
   const [error, setError] = useState<string | null>(null);
   const [previewMode, setPreviewMode] = useState<"formatted" | "markdown">("formatted");
   const [copied, setCopied] = useState(false);
+  const [copiedMd, setCopiedMd] = useState(false);
   const [showCvDrawer, setShowCvDrawer] = useState(false);
   const [showApiKeyModal, setShowApiKeyModal] = useState(false);
+  const [showInstructionsModal, setShowInstructionsModal] = useState(false);
+  const [instructionsContent, setInstructionsContent] = useState<string>("");
+  const [isLoadingInstructions, setIsLoadingInstructions] = useState(false);
   const [clientApiKey, setClientApiKey] = useState("");
   const [hasSavedKey, setHasSavedKey] = useState(false);
 
+  const handleOpenInstructions = async () => {
+    setShowInstructionsModal(true);
+    if (!instructionsContent) {
+      setIsLoadingInstructions(true);
+      try {
+        const res = await fetch("/api/cover-letter/generate");
+        const data = await res.json();
+        if (data.instructions) {
+          setInstructionsContent(data.instructions);
+        }
+      } catch (e) {
+        console.error("Failed to load instructions:", e);
+      } finally {
+        setIsLoadingInstructions(false);
+      }
+    }
+  };
+
+  // Dynamic Today's Date formatted as "Month Day, Year"
+  const todayFormatted = new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date());
+
   const currentTemplate = COVER_LETTER_TEMPLATES.find((t) => t.id === selectedTemplate);
-  const templatePreview = currentTemplate?.systemDirective.split("=== TEMPLATE START ===")[1]?.split("=== TEMPLATE END ===")[0]?.trim() || "";
+  const rawTemplatePreview = currentTemplate?.systemDirective.split("=== TEMPLATE START ===")[1]?.split("=== TEMPLATE END ===")[0]?.trim() || "";
+  const templatePreview = rawTemplatePreview.replace(/\[Date\]/g, todayFormatted);
 
   // File upload input refs
   const jdFileInputRef = useRef<HTMLInputElement>(null);
@@ -176,7 +208,7 @@ export default function CoverLetterStudioPage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // Print to PDF
+  // Print to PDF (triggers native print dialog for clean A4 PDF)
   const handlePrint = () => {
     window.print();
   };
@@ -189,49 +221,67 @@ export default function CoverLetterStudioPage() {
 
   return (
     <>
-      {/* ── Print Stylesheet for clean native A4 PDF generation ── */}
+      {/* ── Native A4 Print Stylesheet for Real Document PDF Export ── */}
       <style>{`
         @media print {
-          body, main, section, .grid {
-            background: white !important;
+          @page {
+            size: A4;
+            margin: 24mm 20mm 20mm 20mm;
+          }
+          * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
+          html, body {
+            background: #ffffff !important;
+            color: #111827 !important;
             margin: 0 !important;
             padding: 0 !important;
-            display: block !important;
+            width: 100% !important;
             height: auto !important;
-            min-height: auto !important;
           }
-          /* Hide all application elements */
-          nav, aside, header, footer, [data-no-print] {
+          header, nav, aside, [data-no-print] {
             display: none !important;
           }
-          /* Show ONLY the printable document sheet */
+          main {
+            background: transparent !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            display: block !important;
+            min-height: auto !important;
+          }
+          .grid, section {
+            display: block !important;
+            width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+          }
           #printable-sheet {
             display: block !important;
-            position: relative !important;
-            width: 100% !important;
-            margin: 0 !important;
-            padding: 24mm 20mm !important;
-            box-shadow: none !important;
             border: none !important;
-            background: white !important;
-            color: #111827 !important;
-          }
-          #printable-sheet * {
-            color: inherit !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            min-height: auto !important;
+            background: transparent !important;
           }
           .print-hidden {
             display: none !important;
           }
-          .print-only {
+          .print-doc-body {
             display: block !important;
-          }
-          @page {
-            size: A4;
-            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+            font-size: 11pt !important;
+            line-height: 1.65 !important;
+            color: #111827 !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
           }
         }
         @media screen {
-          .print-only {
+          .print-doc-body {
             display: none !important;
           }
         }
@@ -260,21 +310,34 @@ export default function CoverLetterStudioPage() {
                   <h1 className="text-sm font-bold tracking-tight text-[#1F2937] leading-none">
                     AI Cover Letter Studio
                   </h1>
-                  <span className="text-[10px] text-[#6B7280]">Bespoke tailored applications via Gemini</span>
+                  <span className="text-[10px] text-[#6B7280]">Humanized, anti-AI bespoke applications</span>
                 </div>
               </div>
             </div>
 
-            {/* Model & API Key Bar */}
+            {/* Model & Settings Bar */}
             <div className="flex items-center gap-2 sm:gap-3">
-              {/* Model selector */}
-              <div className="w-[180px] sm:w-[220px]">
+              {/* Dedicated Instructions MD Button */}
+              <button
+                type="button"
+                onClick={handleOpenInstructions}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-[#E5E7EB] bg-white px-3 py-1.5 text-xs font-semibold text-[#4B5563] hover:bg-[#F9FAFB] hover:border-[#D1D5DB] transition-all shadow-2xs"
+                title="View specialized anti-AI instructions markdown"
+              >
+                <FileCode size={13} className="text-indigo-600" />
+                <span className="hidden sm:inline">Anti-AI Instructions</span>
+                <span className="sm:hidden">Instructions</span>
+                <span className="text-[10px] text-indigo-600 bg-indigo-50 px-1.5 py-0.2 rounded font-mono">.md</span>
+              </button>
+
+              {/* Model selector (strictly 3.6, 3.7, 3.8 Flash) */}
+              <div className="w-[180px] sm:w-[210px]">
                 <AnimatedDropdown
                   actions={MODEL_ACTIONS}
                   selectedId={model}
                   onSelect={(action) => setModel(action.id)}
                   triggerIcon={<Sliders size={14} />}
-                  placeholder="Search AI Models..."
+                  placeholder="Select Flash Model..."
                 />
               </div>
 
@@ -282,7 +345,7 @@ export default function CoverLetterStudioPage() {
               <button
                 type="button"
                 onClick={() => setShowApiKeyModal(true)}
-                className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1 text-xs font-semibold transition-all ${hasSavedKey
+                className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-semibold transition-all ${hasSavedKey
                   ? "bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100"
                   : "bg-white border-[#E5E7EB] text-[#4B5563] hover:bg-[#F9FAFB] hover:border-[#D1D5DB]"
                   }`}
@@ -309,9 +372,9 @@ export default function CoverLetterStudioPage() {
                   </div>
                   <h3 className="text-lg font-bold text-[#1F2937] mb-2">Cover Letter Ready</h3>
                   <p className="text-sm text-[#6B7280] mb-8 leading-relaxed">
-                    Your bespoke cover letter has been synthesized. You can refine it in the live preview or export it to PDF.
+                    Your bespoke cover letter has been synthesized. You can edit it directly in the typed document preview or export it to PDF.
                   </p>
-                  <button 
+                  <button
                     onClick={() => {
                       if (confirm("Are you sure you want to create a new cover letter? This will discard the current one.")) {
                         setCoverLetter("");
@@ -325,12 +388,22 @@ export default function CoverLetterStudioPage() {
                 </div>
               </div>
             )}
-            
+
             {/* Template Archetype Selector */}
             <div className="rounded-2xl border border-[#E5E7EB] bg-white p-5 shadow-xs">
-              <label className="text-xs font-bold uppercase tracking-wider text-[#4B5563] block mb-3">
-                1. Select Archetype
-              </label>
+              <div className="flex items-center justify-between mb-3">
+                <label className="text-xs font-bold uppercase tracking-wider text-[#4B5563]">
+                  1. Select Archetype
+                </label>
+                <button
+                  type="button"
+                  onClick={handleOpenInstructions}
+                  className="text-[11px] font-medium text-indigo-600 hover:text-indigo-800 flex items-center gap-1"
+                >
+                  <FileCode size={11} />
+                  <span>Anti-AI Rules Active</span>
+                </button>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {COVER_LETTER_TEMPLATES.map((tmpl) => {
                   const isSelected = selectedTemplate === tmpl.id;
@@ -448,7 +521,7 @@ export default function CoverLetterStudioPage() {
                 <div className="flex items-center gap-2">
                   <FileText size={14} className="text-indigo-600" />
                   <span className="text-xs font-bold uppercase tracking-wider text-[#4B5563]">
-                    4. My Data
+                    4. Candidate CV Fact Base
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -461,7 +534,7 @@ export default function CoverLetterStudioPage() {
                 <div className="p-4 border-t border-[#E5E7EB] flex flex-col gap-3">
                   <div className="flex items-center justify-between">
                     <p className="text-[11px] text-[#6B7280]">
-                      This Markdown CV provides the factual anchor for all claims and achievements.
+                      This verified CV Markdown provides the factual anchor for all claims and achievements.
                     </p>
                     <div className="flex items-center gap-2">
                       <input
@@ -535,7 +608,7 @@ export default function CoverLetterStudioPage() {
               {isGenerating ? (
                 <>
                   <RefreshCw size={16} className="animate-spin" />
-                  <span>Synthesizing Cover Letter with Gemini...</span>
+                  <span>Synthesizing Humanized Cover Letter with {model}...</span>
                 </>
               ) : (
                 <>
@@ -547,13 +620,13 @@ export default function CoverLetterStudioPage() {
           </section>
 
           {/* ═════════════════════════════════════════════════════════════════════
-              RIGHT PANE: LIVE A4 LETTERHEAD PREVIEW (lg:col-span-7)
+              RIGHT PANE: LIVE A4 TYPED DOCUMENT CANVAS (lg:col-span-7)
           ══════════════════════════════════════════════════════════════════════ */}
           <section className="lg:col-span-7 flex flex-col gap-4">
             {/* Canvas Action Bar */}
             <div data-no-print className="flex flex-wrap items-center justify-between gap-3 bg-white border border-[#E5E7EB] rounded-2xl px-4 py-2.5 shadow-xs">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-[#374151]">A4 Document Canvas</span>
+                <span className="text-xs font-bold text-[#374151]">A4 Typed Document Canvas</span>
                 {coverLetter && (
                   <span className="text-[10px] font-mono text-[#6B7280] bg-[#F3F4F6] px-2 py-0.5 rounded-full">
                     {coverLetter.trim().split(/\s+/).length} words
@@ -573,7 +646,7 @@ export default function CoverLetterStudioPage() {
                       }`}
                   >
                     <Eye size={12} />
-                    <span>Preview</span>
+                    <span>Typed View</span>
                   </button>
                   <button
                     type="button"
@@ -584,7 +657,7 @@ export default function CoverLetterStudioPage() {
                       }`}
                   >
                     <Code size={12} />
-                    <span>Markdown</span>
+                    <span>Raw Text</span>
                   </button>
                 </div>
 
@@ -612,75 +685,50 @@ export default function CoverLetterStudioPage() {
               </div>
             </div>
 
-            {/* The A4 Letterhead Sheet */}
+            {/* The Real Document Sheet (Starts cleanly as normal text, no lines) */}
             <div className="relative w-full flex justify-center overflow-x-auto py-2">
               <div
                 id="printable-sheet"
-                className="w-full max-w-[760px] min-h-[960px] bg-white border border-[#E5E7EB] rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.06)] p-8 sm:p-12 flex flex-col justify-between transition-all"
+                className="w-full max-w-[760px] min-h-[960px] bg-white border border-[#E5E7EB] rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.06)] p-8 sm:p-14 flex flex-col transition-all"
               >
                 {coverLetter ? (
                   previewMode === "formatted" ? (
-                    <div className="flex flex-col h-full">
-                      {/* Document Letterhead */}
-                      <div className="border-b border-[#E5E7EB] pb-5 mb-6">
-                        <div className="flex flex-wrap items-baseline justify-between gap-2 mb-1">
-                          <h2 className="text-2xl font-bold tracking-tight text-[#111827]">
-                            Mario Richie Lim
-                          </h2>
-                          <span className="text-xs font-semibold text-indigo-600">
-                            Full-Stack & AI Engineer
-                          </span>
-                        </div>
-                        <p className="text-xs text-[#6B7280]">
-                          Jakarta, Indonesia • limtjiesiong@gmail.com • mariorichie.com
-                        </p>
-                      </div>
-
-                      {/* Editable Content area */}
+                    <div className="flex flex-col h-full w-full">
+                      {/* Fully editable typed document area */}
                       <textarea
                         value={coverLetter}
                         onChange={(e) => setCoverLetter(e.target.value)}
-                        className="w-full flex-1 text-sm text-[#1F2937] leading-relaxed resize-none focus:outline-hidden bg-transparent font-sans print-hidden"
-                        style={{ minHeight: "700px" }}
+                        className="w-full flex-1 text-[13.5px] sm:text-[14px] text-[#111827] leading-[1.7] font-sans resize-none focus:outline-hidden bg-transparent print-hidden"
+                        style={{ minHeight: "820px" }}
+                        placeholder="Your cover letter text starts here..."
                       />
-                      {/* Print-only content area to allow natural text flow across pages */}
-                      <div className="print-only text-sm text-[#1F2937] leading-relaxed font-sans whitespace-pre-wrap flex-1">
+                      {/* Print-only div: natural pagination and crisp document rendering for PDF export */}
+                      <div className="print-doc-body">
                         {coverLetter}
-                      </div>
-
-                      {/* Bottom Footer watermark */}
-                      <div className="pt-8 border-t border-[#F3F4F6] text-[10px] text-[#9CA3AF] flex justify-between">
-                        <span>Generated via Mario Richie Lim AI Studio</span>
-                        <span>Formatted for A4 Standard</span>
                       </div>
                     </div>
                   ) : (
-                    /* Raw Markdown view */
+                    /* Raw text view */
                     <textarea
                       value={coverLetter}
                       onChange={(e) => setCoverLetter(e.target.value)}
-                      className="w-full h-full min-h-[800px] font-mono text-xs text-[#1F2937] leading-relaxed resize-none focus:outline-hidden bg-transparent"
+                      className="w-full h-full min-h-[820px] font-mono text-xs text-[#1F2937] leading-relaxed resize-none focus:outline-hidden bg-transparent"
                     />
                   )
                 ) : (
-                  /* Template Blueprint Preview */
-                  <div className="flex flex-col h-full animate-in fade-in duration-500">
-                    <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-[#E5E7EB]">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shadow-xs">
-                          <Sparkles size={18} />
-                        </div>
-                        <div>
-                          <h3 className="text-sm font-bold text-[#1F2937]">Template Blueprint</h3>
-                          <p className="text-xs text-[#6B7280]">
-                            {currentTemplate?.name}
-                          </p>
-                        </div>
+                  /* Template Blueprint Preview (Clean text, today's date, no decorative lines) */
+                  <div className="flex flex-col h-full w-full animate-in fade-in duration-500">
+                    <div data-no-print className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-3 border-b border-[#F3F4F6]">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold text-[#1F2937]">{currentTemplate?.name}</span>
+                        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
+                          Blueprint Structure
+                        </span>
                       </div>
                       <button
                         type="button"
                         onClick={handleLoadSample}
-                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50 border border-indigo-200 px-3.5 py-2 rounded-xl transition-all hover:bg-indigo-100"
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50 border border-indigo-200 px-3 py-1.5 rounded-xl transition-all hover:bg-indigo-100"
                       >
                         <Briefcase size={12} />
                         <span>Load Sample Data</span>
@@ -690,20 +738,85 @@ export default function CoverLetterStudioPage() {
                     <textarea
                       value={templatePreview}
                       readOnly
-                      className="w-full flex-1 text-sm text-[#4B5563] leading-relaxed resize-none focus:outline-hidden bg-transparent font-sans opacity-60"
-                      style={{ minHeight: "700px" }}
+                      className="w-full flex-1 text-[13.5px] sm:text-[14px] text-[#4B5563] leading-[1.7] font-sans resize-none focus:outline-hidden bg-transparent opacity-75 cursor-default"
+                      style={{ minHeight: "820px" }}
                     />
-
-                    <div className="pt-8 border-t border-[#F3F4F6] text-[10px] text-[#9CA3AF] flex justify-between">
-                      <span>Blueprint Preview</span>
-                      <span>Awaiting Generation</span>
-                    </div>
                   </div>
                 )}
               </div>
             </div>
           </section>
         </div>
+
+        {/* ── Dedicated Anti-AI Instructions Modal (.md) ── */}
+        {showInstructionsModal && (
+          <div
+            role="dialog"
+            aria-modal="true"
+            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200"
+          >
+            <div className="w-full max-w-2xl max-h-[85vh] bg-white rounded-3xl border border-[#E5E7EB] shadow-2xl flex flex-col overflow-hidden">
+              <div className="flex items-center justify-between p-5 border-b border-[#E5E7EB] bg-[#F9FAFB]">
+                <div className="flex items-center gap-3">
+                  <div className="h-9 w-9 rounded-xl bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-600">
+                    <FileCode size={18} />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-[#1F2937]">cover-letter-instructions.md</h3>
+                    <p className="text-[11px] text-[#6B7280]">Dedicated prompt instructions & anti-AI humanization directives</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowInstructionsModal(false)}
+                  className="h-8 w-8 rounded-lg flex items-center justify-center text-[#6B7280] hover:bg-[#E5E7EB] transition-colors"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+
+              <div className="p-5 overflow-y-auto flex-1 bg-[#FAFAFA]">
+                {isLoadingInstructions ? (
+                  <div className="flex items-center justify-center py-16 text-xs text-[#6B7280] gap-2">
+                    <RefreshCw size={14} className="animate-spin text-indigo-600" />
+                    <span>Loading cover-letter-instructions.md...</span>
+                  </div>
+                ) : (
+                  <pre className="text-xs font-mono text-[#374151] whitespace-pre-wrap leading-relaxed bg-white p-4 rounded-xl border border-[#E5E7EB] shadow-2xs">
+                    {instructionsContent || "No instructions loaded."}
+                  </pre>
+                )}
+              </div>
+
+              <div className="flex items-center justify-between p-4 border-t border-[#E5E7EB] bg-white">
+                <span className="text-xs text-[#6B7280]">
+                  Location: <code className="bg-[#F3F4F6] px-1.5 py-0.5 rounded text-[11px]">src/lib/data/cover-letter-instructions.md</code>
+                </span>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(instructionsContent);
+                      setCopiedMd(true);
+                      setTimeout(() => setCopiedMd(false), 2000);
+                    }}
+                    className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium border border-[#E5E7EB] rounded-xl hover:bg-[#F9FAFB] text-[#374151]"
+                  >
+                    {copiedMd ? <Check size={12} className="text-emerald-600" /> : <Copy size={12} />}
+                    <span>{copiedMd ? "Copied" : "Copy MD"}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowInstructionsModal(false)}
+                    className="px-4 py-1.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* ── API Key Configuration Modal ── */}
         {showApiKeyModal && (
