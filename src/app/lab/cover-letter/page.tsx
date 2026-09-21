@@ -208,9 +208,211 @@ export default function CoverLetterStudioPage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // Print to PDF (triggers native print dialog for clean A4 PDF)
+  // Escape special HTML characters to prevent XSS during document printing
+  const escapeHtml = (str: string) => {
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  };
+
+  // Print to PDF using an isolated iframe (guarantees perfect 1-inch margins on all pages like Google Docs / Word)
   const handlePrint = () => {
-    window.print();
+    if (!coverLetter) return;
+
+    const text = coverLetter.replace(/\r\n/g, "\n").trim();
+    const rawParagraphs = text.split(/\n\s*\n/);
+
+    const formattedParagraphsHtml = rawParagraphs
+      .map((block) => {
+        const trimmed = block.trim();
+        if (!trimmed) return "";
+
+        const lines = trimmed.split("\n").map((l) => l.trim()).filter(Boolean);
+
+        // Header or recipient blocks (multi-line contact/address info)
+        if (lines.length > 1 && lines.length <= 5 && trimmed.length < 350) {
+          return `<div class="doc-block">${lines
+            .map((line) => `<div>${escapeHtml(line)}</div>`)
+            .join("")}</div>`;
+        }
+
+        // Standard narrative body paragraphs
+        return `<p>${escapeHtml(trimmed).replace(/\n/g, "<br/>")}</p>`;
+      })
+      .filter(Boolean)
+      .join("\n");
+
+    const printHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Cover Letter - Mario Richie Lim</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 25.4mm; /* Exact 1.0 inch Google Docs & MS Word standard margin on every page */
+    }
+    @media print {
+      html, body {
+        background: #ffffff !important;
+        color: #111827 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+      }
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 11pt;
+      line-height: 1.55;
+      color: #111827;
+      background: #ffffff;
+      -webkit-font-smoothing: antialiased;
+    }
+    .doc-container {
+      width: 100%;
+      box-sizing: border-box;
+    }
+    p {
+      margin-top: 0;
+      margin-bottom: 11pt;
+      text-align: justify;
+      text-justify: inter-word;
+      line-height: 1.55;
+      orphans: 3;
+      widows: 3;
+      word-break: break-word;
+    }
+    .doc-block {
+      margin-bottom: 12pt;
+      line-height: 1.45;
+      word-break: break-word;
+    }
+  </style>
+</head>
+<body>
+  <div class="doc-container">
+    ${formattedParagraphsHtml}
+  </div>
+</body>
+</html>`;
+
+    // Create a hidden, isolated iframe to prevent any Next.js, Lenis, or CSS spillover
+    const iframe = document.createElement("iframe");
+    iframe.style.position = "fixed";
+    iframe.style.right = "0";
+    iframe.style.bottom = "0";
+    iframe.style.width = "0";
+    iframe.style.height = "0";
+    iframe.style.border = "0";
+    document.body.appendChild(iframe);
+
+    const doc = iframe.contentWindow?.document;
+    if (doc) {
+      doc.open();
+      doc.write(printHtml);
+      doc.close();
+
+      iframe.contentWindow?.focus();
+      setTimeout(() => {
+        iframe.contentWindow?.print();
+        setTimeout(() => {
+          if (document.body.contains(iframe)) {
+            document.body.removeChild(iframe);
+          }
+        }, 1500);
+      }, 300);
+    }
+  };
+
+  // Export directly as a Microsoft Word (.doc) file with standard 1-inch margins
+  const handleDownloadWord = () => {
+    if (!coverLetter) return;
+
+    const text = coverLetter.replace(/\r\n/g, "\n").trim();
+    const rawParagraphs = text.split(/\n\s*\n/);
+
+    const formattedContent = rawParagraphs
+      .map((block) => {
+        const trimmed = block.trim();
+        if (!trimmed) return "";
+        const lines = trimmed.split("\n").map((l) => l.trim()).filter(Boolean);
+        if (lines.length > 1 && lines.length <= 5 && trimmed.length < 350) {
+          return `<p style="margin: 0 0 10pt 0; line-height: 1.35;">${lines
+            .map((l) => escapeHtml(l))
+            .join("<br/>")}</p>`;
+        }
+        return `<p style="margin: 0 0 10pt 0; line-height: 1.45; text-align: justify;">${escapeHtml(
+          trimmed
+        ).replace(/\n/g, "<br/>")}</p>`;
+      })
+      .filter(Boolean)
+      .join("");
+
+    const wordDocHtml = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+  <meta charset='utf-8'>
+  <title>Cover Letter - Mario Richie Lim</title>
+  <!--[if gte mso 9]>
+  <xml>
+    <w:WordDocument>
+      <w:View>Print</w:View>
+      <w:Zoom>100</w:Zoom>
+      <w:DoNotOptimizeForBrowser/>
+    </w:WordDocument>
+  </xml>
+  <![endif]-->
+  <style>
+    @page Section1 {
+      size: 595.3pt 841.9pt; /* A4 */
+      margin: 72.0pt 72.0pt 72.0pt 72.0pt; /* Standard 1.0 inch margins */
+      mso-header-margin: 36.0pt;
+      mso-footer-margin: 36.0pt;
+      mso-paper-source: 0;
+    }
+    div.Section1 {
+      page: Section1;
+    }
+    body {
+      font-family: 'Calibri', 'Arial', sans-serif;
+      font-size: 11pt;
+      line-height: 1.45;
+      color: #000000;
+    }
+    p {
+      margin: 0 0 10pt 0;
+      line-height: 1.45;
+    }
+  </style>
+</head>
+<body>
+  <div class="Section1">
+    ${formattedContent}
+  </div>
+</body>
+</html>`;
+
+    const blob = new Blob(["\ufeff" + wordDocHtml], {
+      type: "application/msword",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "Cover-Letter-Mario-Richie-Lim.doc";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   // Load sample data
@@ -672,12 +874,25 @@ export default function CoverLetterStudioPage() {
                   <span>{copied ? "Copied" : "Copy"}</span>
                 </button>
 
+                {/* Export to Word (.doc) Button */}
+                <button
+                  type="button"
+                  onClick={handleDownloadWord}
+                  disabled={!coverLetter}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-[#E5E7EB] bg-white px-2.5 py-1.5 text-xs font-medium text-[#374151] hover:bg-[#F9FAFB] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  title="Download editable Microsoft Word document"
+                >
+                  <FileText size={12} className="text-blue-600" />
+                  <span>Word (.doc)</span>
+                </button>
+
                 {/* Print / Export to PDF Button */}
                 <button
                   type="button"
                   onClick={handlePrint}
                   disabled={!coverLetter}
                   className="inline-flex items-center gap-1.5 rounded-lg bg-[#1F2937] px-3 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-black disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                  title="Export clean PDF with 1-inch margins"
                 >
                   <Download size={12} />
                   <span>Export to PDF</span>
