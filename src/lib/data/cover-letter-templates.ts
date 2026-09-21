@@ -11,29 +11,34 @@ export const COVER_LETTER_TEMPLATES: CoverLetterTemplate[] = [
     id: "modern-tech",
     name: "Modern Tech & High-Growth",
     badge: "Recommended",
-    description: "Punchy, metrics-driven, and impact-focused. Ideal for modern startups and tech teams.",
+    description: "Punchy, metrics-driven, and impact-focused. Ideal for modern startups, product teams, and remote roles.",
     systemDirective: `
-Please use the following template structure. Do not include markdown headers, decorative lines, or dividers. Start directly with the plain text contact info and date. Replace bracketed placeholders with synthesized details from the Job Description and CV.
+STRATEGIC ARCHETYPE FOCUS: Modern Tech & High-Growth
+- Tone: Confident, proactive, builder-oriented, and articulate.
+- Narrative Angle: Emphasize product velocity, end-to-end execution (frontend, backend, database), clean component architectures (React, Next.js, Node.js), and autonomous ownership in remote/distributed teams.
+- Key Evidence to Prioritize: Full-stack applications (LearnMuse, internal systems), REST APIs, modern state management, and real-time or AI integrations where relevant.
+- Address Specific JD Hooks: If the job description asks about a project built end-to-end or async remote communication across time zones, directly answer it with rich, authentic technical details.
+- Important: Do NOT mechanically copy boilerplate text. Craft an original, organic narrative that addresses the company's stated tech stack and product goals.
 
 === TEMPLATE START ===
 Mario Richie Lim
-Jakarta, Indonesia | +62 878-0929-0500 | mario.richie.lim@gmail.com | linkedin.com/in/mario-richie-lim/ | github.com/000Twilight | mario-richie-lim.vercel.app
+Jakarta, Indonesia | +62 878-0929-0500 | mario.richie.lim@gmail.com | linkedin.com/in/mario-richie-lim | github.com/000Twilight | mario-richie-lim.vercel.app
 
 [Date]
 
-[Hiring Manager Name or "Hiring Team"]
+Hiring Team
 [Company Name]
-[Company Address or "Remote"]
+[Location / Remote]
 
-Dear [Hiring Manager Name or "Hiring Team"],
+Dear Hiring Team,
 
-[Open directly with a sharp observation about the company's product or mission, connecting it to why this engineering challenge fits your background].
+[Open with a thoughtful observation about the company's product, mission, or explicit engineering challenge, directly connecting it to your hands-on background].
 
-In my recent experience as a [Your Recent Role] at [Your Recent Company/Project], I [Insert 1-2 major technical achievements directly relevant to the JD, using metrics where possible]. What drew me to your team is [Mention a specific tech stack or engineering goal from the JD], where my experience in [Mention 1-2 core skills like React, TypeScript, Laravel, or Gemini API automation] will allow me to hit the ground running.
+[Detail a relevant end-to-end project or recent achievement matching their primary tech stack. Highlight architectural decisions, state management, API design, and concrete metrics that demonstrate your ability to execute quickly and cleanly].
 
-[Insert a short, focused paragraph connecting another relevant project or problem-solving accomplishment to a key requirement in the Job Description. Keep the tone grounded, confident, and direct.]
+[Connect another relevant project or problem-solving accomplishment to their specific engineering needs, demonstrating your experience with distributed teams, automated workflows, or clean code practices].
 
-I would love to talk through how my technical background and focus on product velocity can help [Company Name] execute on these goals. Thanks for your time and consideration.
+[Grounded, professional closing offering to discuss how your technical background and product focus can help their engineering team hit their targets].
 
 Sincerely,
 
@@ -45,29 +50,34 @@ Mario Richie Lim
     id: "enterprise",
     name: "Enterprise & Scalable Systems",
     badge: "Structured",
-    description: "Formal, thorough, and architectural. Emphasizes reliability and cross-team collaboration.",
+    description: "Architectural, thorough, and process-oriented. Emphasizes stability, data integrity, and cross-team execution.",
     systemDirective: `
-Please use the following template structure. Do not include markdown headers, decorative lines, or dividers. Start directly with the plain text contact info and date. Replace bracketed placeholders with synthesized details from the Job Description and CV.
+STRATEGIC ARCHETYPE FOCUS: Enterprise & Scalable Systems
+- Tone: Structured, disciplined, analytical, and professional.
+- Narrative Angle: Emphasize business workflow digitalization, relational data modeling (PostgreSQL, MySQL), system stability, rigorous technical documentation (TSD/manuals), and bridging technical solutions with non-technical business users.
+- Key Evidence to Prioritize: Internal enterprise systems at PT. Nusantara Compnet Integrator (50% efficiency boost), construction project management platform at PT. Bonumata Asia, and structured UAT/system handover.
+- Address Specific JD Hooks: If the posting highlights documentation, technical specification writing, or stakeholder communication, highlight your experience drafting TSDs and producing video tutorials.
+- Important: Do NOT mechanically copy boilerplate text. Craft an original, organic narrative that reflects engineering maturity and business impact.
 
 === TEMPLATE START ===
 Mario Richie Lim
-Jakarta, Indonesia | +62 878-0929-0500 | mario.richie.lim@gmail.com | linkedin.com/in/mario-richie-lim/ | github.com/000Twilight | mario-richie-lim.vercel.app
+Jakarta, Indonesia | +62 878-0929-0500 | mario.richie.lim@gmail.com | linkedin.com/in/mario-richie-lim | github.com/000Twilight | mario-richie-lim.vercel.app
 
 [Date]
 
-[Hiring Manager Name or "Hiring Committee"]
+Hiring Committee
 [Company Name]
-[Company Address or "Remote"]
+[Company Address / Location]
 
-Dear [Hiring Manager Name or "Hiring Committee"],
+Dear Hiring Committee,
 
-I am reaching out regarding the [Job Title] role at [Company Name]. Having built robust full-stack applications and automated internal operational systems that improved business efficiency by up to 50%, I am eager to bring this architectural rigor to your team.
+[Open by addressing the operational scale or business mission of the organization, linking their need for dependable web systems to your track record in enterprise application development].
 
-During my work on [Insert relevant Enterprise/Scalable Project], I focused heavily on [Insert 2-3 enterprise skills, e.g., relational databases, system architecture, backend optimization]. From your description, [Company Name] is prioritizing [Insert a core JD requirement], which directly matches my background in [Insert matching experience/metric].
+[Describe your experience translating manual business workflows into scalable web solutions, emphasizing database schema design, approval hierarchies, and quantifiable operational efficiency improvements].
 
-I place a premium on system stability, maintainable data models, and tight cross-functional execution. [Company Name]'s standard for [Insert Company Value/Mission] resonates with how I build software, and I am excited about the opportunity to contribute.
+[Highlight your discipline in technical documentation, Technical Specification Documents (TSDs), video walkthroughs, and User Acceptance Testing (UAT) that ensure seamless adoption and long-term maintainability].
 
-I look forward to the possibility of discussing how my technical background aligns with your engineering roadmap.
+[Confident closing emphasizing your focus on data integrity, scalable architecture, and cross-functional collaboration].
 
 Sincerely,
 
@@ -79,29 +89,33 @@ Mario Richie Lim
     id: "creative-technologist",
     name: "Product & Creative Technologist",
     badge: "Craft & UX",
-    description: "Narrative and craftsmanship focused. Bridges high-fidelity UI/UX with AI workflows.",
+    description: "Narrative and craftsmanship focused. Bridges high-fidelity UI/UX design with scalable engineering.",
     systemDirective: `
-Please use the following template structure. Do not include markdown headers, decorative lines, or dividers. Start directly with the plain text contact info and date. Replace bracketed placeholders with synthesized details from the Job Description and CV.
+STRATEGIC ARCHETYPE FOCUS: Product & Creative Technologist
+- Tone: Design-aware, articulate, user-centric, and technically sharp.
+- Narrative Angle: Emphasize the bridge between thoughtful UI/UX craft (responsive layouts, accessibility, micro-interactions, Figma design systems) and performant backend engineering (clean APIs, normalized schemas, AI workflows).
+- Key Evidence to Prioritize: High-conversion frontend engineering, responsive web design with Tailwind CSS, multimodal AI interfaces (LearnMuse), and client-side performance optimization.
+- Important: Do NOT mechanically copy boilerplate text. Write an engaging, authentic story demonstrating technical craftsmanship.
 
 === TEMPLATE START ===
 Mario Richie Lim
-Jakarta, Indonesia | +62 878-0929-0500 | mario.richie.lim@gmail.com | linkedin.com/in/mario-richie-lim/ | github.com/000Twilight | mario-richie-lim.vercel.app
+Jakarta, Indonesia | +62 878-0929-0500 | mario.richie.lim@gmail.com | linkedin.com/in/mario-richie-lim | github.com/000Twilight | mario-richie-lim.vercel.app
 
 [Date]
 
-[Hiring Manager Name or "Design & Engineering Team"]
+Engineering & Design Team
 [Company Name]
-[Company Address or "Remote"]
+[Location / Remote]
 
-Dear [Hiring Manager Name or "Team"],
+Dear Hiring Team,
 
-Great products happen at the intersection of thoughtful design and solid engineering. That philosophy is what immediately caught my attention about the [Job Title] role at [Company Name].
+[Open directly with an observation connecting intuitive design craft to engineering execution, showing immediate alignment with what the company is creating].
 
-Seeing that your team is building [Insert a specific initiative or feature from JD/Company Profile] felt like a natural fit. In my work on [Insert a project from CV, e.g., LearnMuse or interactive systems], I worked directly across the stack, connecting complex APIs and database pipelines with fluid, intuitive user interfaces.
+[Highlight an end-to-end application where you connected complex backend pipelines and databases with fluid, intuitive client interfaces, noting user feedback and technical performance].
 
-I care as much about clean database schemas and reliable endpoints as I do about responsive layouts and micro-interactions. [Insert a brief paragraph about how your technical range maps directly to their current product needs].
+[Demonstrate your attention to both sides of the engineering spectrum: clean data schemas and reliable endpoints on one side, and responsive, accessible UI components on the other].
 
-I would love to walk through some of my work and explore how I can help [Company Name] build exceptional products.
+[Grounded, enthusiastic closing looking forward to walking through your projects and discussing how you can elevate their product experience].
 
 Best regards,
 
@@ -115,7 +129,9 @@ Mario Richie Lim
     badge: "Flexible",
     description: "Follows your exact custom instructions and guidance.",
     systemDirective: `
-Please generate a cover letter adhering strictly to the candidate's custom instructions provided in the prompt. Always start with the candidate contact header and today's date in plain text with no decorative lines.
+STRATEGIC ARCHETYPE FOCUS: Custom Instructions Blueprint
+- Strictly honor and execute all custom instructions provided by the candidate.
+- Adapt tone, project selection, and formatting emphasis based directly on the candidate's custom prompt.
 `,
   },
 ];

@@ -78,14 +78,11 @@ export async function POST(req: NextRequest) {
     instructionsMarkdown = instructionsMarkdown.replace(/\{\{TODAYS_DATE\}\}/g, todayDate);
 
     const prompt = `
-You are an expert career strategist and technical writing partner crafting a bespoke, human-sounding cover letter for Mario Richie Lim.
+You are an expert technical career strategist and seasoned software engineer writing a bespoke, deeply human cover letter for Mario Richie Lim.
 
 Today's Date: ${todayDate}
 
-=== DEDICATED INSTRUCTIONS & ANTI-AI DIRECTIVES (FROM cover-letter-instructions.md) ===
-${instructionsMarkdown}
-
-=== CANDIDATE CV DATA ===
+=== CANDIDATE PROFILE & VERIFIED CV DATA ===
 ${cvData}
 
 === TARGET JOB DESCRIPTION ===
@@ -93,29 +90,44 @@ ${jobDescription}
 
 ${companyProfile ? `=== TARGET COMPANY PROFILE & CONTEXT ===\n${companyProfile}\n` : ""}
 
-=== SELECTED ARCHETYPE: ${selectedTemplate.name} ===
+=== SELECTED ARCHETYPE STRATEGY: ${selectedTemplate.name} ===
 ${selectedTemplate.systemDirective}
 
-${customInstructions ? `=== CANDIDATE'S CUSTOM INSTRUCTIONS ===\n${customInstructions}\n` : ""}
+${customInstructions ? `=== CANDIDATE'S CUSTOM INSTRUCTIONS (HIGHEST PRIORITY) ===\n${customInstructions}\n` : ""}
+
+=== ANTI-AI HUMANIZATION DIRECTIVES (FROM cover-letter-instructions.md) ===
+${instructionsMarkdown}
+
+=== CRITICAL STRATEGIC PROCESS (EXECUTE BEFORE WRITING) ===
+1. DETECT SPECIAL JD PROMPTS: Look closely at the Job Description. Does it ask any specific questions or request specific stories (e.g., "tell us about a project you built end to end", "why this company", remote work preferences, async tools, etc.)? If yes, you MUST naturally weave an authentic answer into the body.
+2. CHOOSE THE STRONGEST EVIDENCE: Select 1 or 2 specific projects or work experiences from Mario's CV that directly match the required technologies and domain. Use verified metrics (e.g. 50% efficiency boost, 40% reduction in booking conflicts, 3.8 GPA, C2/940 TOEIC) and real tech stacks (React, Node.js, Next.js, Python, PostgreSQL, MySQL, Socket.IO, Gemini API, Supabase, Kotlin, etc.).
+3. NO FORMULAIC FILL-IN-THE-BLANKS: Do NOT use boilerplate template phrasing like "In my recent experience as a [Role] at [Company], I... What drew me to your team is...". Write an organic, cohesive narrative with varied sentence structures and natural paragraph progression.
+4. RESPECT CANDIDATE'S CUSTOM INSTRUCTIONS: If custom instructions are provided above, seamlessly incorporate them (e.g., highlighting specific technical documentation, video tutorials, or particular responsibilities).
 
 === STRICT OUTPUT INSTRUCTIONS ===
 1. The output MUST start directly with the candidate contact header and today's date (${todayDate}), followed by the recipient block, salutation, and body:
 Mario Richie Lim
-Jakarta, Indonesia | +62 878-0929-0500 | mario.richie.lim@gmail.com | linkedin.com/in/mario-richie-lim/ | github.com/000Twilight | mario-richie-lim.vercel.app
+Jakarta, Indonesia | +62 878-0929-0500 | mario.richie.lim@gmail.com | linkedin.com/in/mario-richie-lim | github.com/000Twilight | mario-richie-lim.vercel.app
 
 ${todayDate}
 
+[Hiring Manager Name, Role, or "Hiring Team"]
+[Company Name]
+[Company Address, City, or "Remote"]
+
+Dear [Recipient Name or "Hiring Team"],
+
 2. NO DECORATIVE LINES: Do not output any "---", "===", line dividers, or horizontal rules.
-3. NO MARKDOWN HEADINGS: Do not use "#", "##", or bold formatting asterisks inside the letter. Produce clean, typed text with natural paragraph breaks.
-4. ZERO AI CLICHÉS: Follow all anti-AI humanization directives from the instructions file above (no "I am writing to express my strong interest", no "Furthermore/Moreover", vary rhythm and length, sound real and grounded).
-5. Output ONLY the cover letter text. No preamble, no meta-commentary.
+3. NO MARKDOWN FORMATTING IN BODY: Do not use "#", "##", bullet lists, or bold formatting asterisks inside the letter body. Produce clean, typed text with natural paragraph breaks.
+4. ZERO AI CLICHÉS: Follow all anti-AI humanization directives (no "I am writing to express my strong interest", no "Furthermore/Moreover", vary rhythm and length, sound real and grounded).
+5. Output ONLY the completed cover letter text. No preamble, no meta-commentary, and no post-signature notes.
 `;
 
     const response = await ai.models.generateContent({
       model: targetModel,
       contents: prompt,
       config: {
-        temperature: 0.85,
+        temperature: 0.45,
       },
     });
 
