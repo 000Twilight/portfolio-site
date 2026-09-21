@@ -29,6 +29,7 @@ import {
 import { COVER_LETTER_TEMPLATES } from "@/lib/data/cover-letter-templates";
 import { DEFAULT_CV_MARKDOWN } from "@/lib/data/default-cv";
 import { AnimatedDropdown, type DropdownAction } from "@/components/ui/animated-dropdown";
+import { generateDocxBlob, extractCompanyFileName } from "@/lib/docx-generator";
 
 // Strictly Gemini 3.6, 3.7, and 3.8 Flash models
 const MODEL_ACTIONS: DropdownAction[] = [
@@ -218,10 +219,11 @@ export default function CoverLetterStudioPage() {
       .replace(/'/g, "&#039;");
   };
 
-  // Print to PDF using an isolated iframe (guarantees perfect 1-inch margins on all pages like Google Docs / Word)
+  // Print to PDF using an isolated iframe (guarantees real selectable text, 1-inch margins, and word-by-word highlight)
   const handlePrint = () => {
     if (!coverLetter) return;
 
+    const companyDocName = extractCompanyFileName(coverLetter, jobDescription, companyProfile).replace(/\.docx$/i, "");
     const text = coverLetter.replace(/\r\n/g, "\n").trim();
     const rawParagraphs = text.split(/\n\s*\n/);
 
@@ -232,14 +234,14 @@ export default function CoverLetterStudioPage() {
 
         const lines = trimmed.split("\n").map((l) => l.trim()).filter(Boolean);
 
-        // Header or recipient blocks (multi-line contact/address info)
+        // Header or recipient block (multi-line contact/address info)
         if (lines.length > 1 && lines.length <= 5 && trimmed.length < 350) {
           return `<div class="doc-block">${lines
-            .map((line) => `<div>${escapeHtml(line)}</div>`)
+            .map((line) => `<div class="line">${escapeHtml(line)}</div>`)
             .join("")}</div>`;
         }
 
-        // Standard narrative body paragraphs
+        // Standard narrative body paragraph
         return `<p>${escapeHtml(trimmed).replace(/\n/g, "<br/>")}</p>`;
       })
       .filter(Boolean)
@@ -249,11 +251,11 @@ export default function CoverLetterStudioPage() {
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Cover Letter - Mario Richie Lim</title>
+  <title>${escapeHtml(companyDocName)}</title>
   <style>
     @page {
       size: A4 portrait;
-      margin: 25.4mm; /* Exact 1.0 inch Google Docs & MS Word standard margin on every page */
+      margin: 25.4mm; /* Standard 1.0 inch margins on all pages */
     }
     @media print {
       html, body {
@@ -272,31 +274,38 @@ export default function CoverLetterStudioPage() {
     body {
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-family: Arial, "Helvetica Neue", Helvetica, Calibri, sans-serif;
       font-size: 11pt;
-      line-height: 1.55;
+      line-height: 1.5;
       color: #111827;
       background: #ffffff;
-      -webkit-font-smoothing: antialiased;
+      text-align: left;
+      -webkit-font-smoothing: subpixel-antialiased;
     }
     .doc-container {
       width: 100%;
       box-sizing: border-box;
+      text-align: left;
     }
     p {
       margin-top: 0;
       margin-bottom: 11pt;
-      text-align: justify;
-      text-justify: inter-word;
-      line-height: 1.55;
-      orphans: 3;
-      widows: 3;
-      word-break: break-word;
+      text-align: left;
+      line-height: 1.5;
+      font-family: Arial, "Helvetica Neue", Helvetica, Calibri, sans-serif;
+      font-size: 11pt;
+      color: #111827;
+      orphans: 2;
+      widows: 2;
     }
     .doc-block {
+      margin-top: 0;
       margin-bottom: 12pt;
       line-height: 1.45;
-      word-break: break-word;
+      text-align: left;
+    }
+    .line {
+      margin-bottom: 2pt;
     }
   </style>
 </head>
@@ -335,80 +344,17 @@ export default function CoverLetterStudioPage() {
     }
   };
 
-  // Export directly as a Microsoft Word (.doc) file with standard 1-inch margins
+  // Export directly as a native Microsoft Word (.docx) file with standard 1-inch margins
   const handleDownloadWord = () => {
     if (!coverLetter) return;
 
-    const text = coverLetter.replace(/\r\n/g, "\n").trim();
-    const rawParagraphs = text.split(/\n\s*\n/);
+    const blob = generateDocxBlob(coverLetter);
+    const fileName = extractCompanyFileName(coverLetter, jobDescription, companyProfile);
 
-    const formattedContent = rawParagraphs
-      .map((block) => {
-        const trimmed = block.trim();
-        if (!trimmed) return "";
-        const lines = trimmed.split("\n").map((l) => l.trim()).filter(Boolean);
-        if (lines.length > 1 && lines.length <= 5 && trimmed.length < 350) {
-          return `<p style="margin: 0 0 10pt 0; line-height: 1.35;">${lines
-            .map((l) => escapeHtml(l))
-            .join("<br/>")}</p>`;
-        }
-        return `<p style="margin: 0 0 10pt 0; line-height: 1.45; text-align: justify;">${escapeHtml(
-          trimmed
-        ).replace(/\n/g, "<br/>")}</p>`;
-      })
-      .filter(Boolean)
-      .join("");
-
-    const wordDocHtml = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-<head>
-  <meta charset='utf-8'>
-  <title>Cover Letter - Mario Richie Lim</title>
-  <!--[if gte mso 9]>
-  <xml>
-    <w:WordDocument>
-      <w:View>Print</w:View>
-      <w:Zoom>100</w:Zoom>
-      <w:DoNotOptimizeForBrowser/>
-    </w:WordDocument>
-  </xml>
-  <![endif]-->
-  <style>
-    @page Section1 {
-      size: 595.3pt 841.9pt; /* A4 */
-      margin: 72.0pt 72.0pt 72.0pt 72.0pt; /* Standard 1.0 inch margins */
-      mso-header-margin: 36.0pt;
-      mso-footer-margin: 36.0pt;
-      mso-paper-source: 0;
-    }
-    div.Section1 {
-      page: Section1;
-    }
-    body {
-      font-family: 'Calibri', 'Arial', sans-serif;
-      font-size: 11pt;
-      line-height: 1.45;
-      color: #000000;
-    }
-    p {
-      margin: 0 0 10pt 0;
-      line-height: 1.45;
-    }
-  </style>
-</head>
-<body>
-  <div class="Section1">
-    ${formattedContent}
-  </div>
-</body>
-</html>`;
-
-    const blob = new Blob(["\ufeff" + wordDocHtml], {
-      type: "application/msword",
-    });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "Cover-Letter-Mario-Richie-Lim.doc";
+    link.download = fileName;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -874,16 +820,16 @@ export default function CoverLetterStudioPage() {
                   <span>{copied ? "Copied" : "Copy"}</span>
                 </button>
 
-                {/* Export to Word (.doc) Button */}
+                {/* Export to Word (.docx) Button */}
                 <button
                   type="button"
                   onClick={handleDownloadWord}
                   disabled={!coverLetter}
                   className="inline-flex items-center gap-1.5 rounded-lg border border-[#E5E7EB] bg-white px-2.5 py-1.5 text-xs font-medium text-[#374151] hover:bg-[#F9FAFB] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                  title="Download editable Microsoft Word document"
+                  title="Download Microsoft Word .docx file"
                 >
                   <FileText size={12} className="text-blue-600" />
-                  <span>Word (.doc)</span>
+                  <span>Word (.docx)</span>
                 </button>
 
                 {/* Print / Export to PDF Button */}
